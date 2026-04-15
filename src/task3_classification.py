@@ -1,4 +1,4 @@
-"""Task 3: topic classification over a directly reviewed label set."""
+"""Task 3: topic classification over an LLM-assisted label set."""
 
 from __future__ import annotations
 

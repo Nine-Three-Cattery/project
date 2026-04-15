@@ -1,4 +1,4 @@
-"""Apply manual Task 3 label adjudications recorded in a YAML update file."""
+"""Apply Task 3 label adjudications recorded in a YAML update file."""
 
 from __future__ import annotations
 
@@ -26,7 +26,7 @@ def build_argument_parser() -> argparse.ArgumentParser:
         "--updates",
         type=Path,
         required=True,
-        help="YAML file that records manual adjudication updates.",
+        help="YAML file that records adjudication updates.",
     )
     parser.add_argument("--output", type=Path, default=LABELS_PATH, help="Output label JSONL path.")
     parser.add_argument(
