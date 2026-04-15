@@ -14,7 +14,7 @@ The 200 topic labels were produced through a three-stage LLM-assisted pipeline r
 
 ### Stage 2: Primary Review (GPT-5.4 / Codex)
 
-GPT-5.4, the model driving OpenAI Codex, reviewed each of the 200 documents in full. For each document, the model read the complete article text and either confirmed or corrected the bootstrap seed label. The resulting labels were tagged as `source: direct_review` with `annotation_method: direct_document_review`.
+GPT-5.4, the model driving OpenAI Codex, reviewed each of the 200 documents in full. For each document, the model read the complete article text and either confirmed or corrected the bootstrap seed label. The resulting labels were tagged as `source: llm_review` with `annotation_method: llm_review`.
 
 ### Stage 3: Cross-Provider External Audit
 

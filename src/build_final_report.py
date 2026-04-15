@@ -50,7 +50,7 @@ def build_argument_parser() -> argparse.ArgumentParser:
         "--task3-review-summary",
         type=Path,
         default=TASK3_LABEL_REVIEW_SUMMARY_PATH,
-        help="Path to the Task 3 direct-review summary JSON.",
+        help="Path to the Task 3 label review summary JSON.",
     )
     parser.add_argument(
         "--task3-audit-summary",
@@ -130,7 +130,7 @@ def build_report(
             )
         review_section = f"""
 - Review tag: `{review_summary["tag"]}`
-- Corrected labels after direct review: `{review_summary["changed_label_count"]}`
+- Corrected labels after LLM-assisted review: `{review_summary["changed_label_count"]}`
 {additional_changes_line}
 """
 

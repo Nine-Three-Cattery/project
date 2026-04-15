@@ -17,7 +17,7 @@
 
 ### Label Provenance
 
-- direct_review: 200
+- llm_review: 200
 
 ### Evaluation Caveat
 

@@ -114,7 +114,7 @@ def main() -> None:
             handle.write("\n")
 
     summary = {
-        "source": "direct_review",
+        "source": "llm_review",
         "tag": config["tag"],
         "reviewed_at": str(config["reviewed_at"]),
         "annotation_method": str(config["annotation_method"]),

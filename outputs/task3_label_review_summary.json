@@ -1,5 +1,5 @@
 {
-  "source": "direct_review",
+  "source": "llm_review",
   "tag": "direct_review_v2",
   "reviewed_at": "2026-04-15",
   "annotation_method": "direct_document_review_with_external_llm_audit",
@@ -10,7 +10,7 @@
     "bootstrapped": 200
   },
   "final_source_distribution": {
-    "direct_review": 200
+    "llm_review": 200
   },
   "initial_label_distribution": {
     "Politics": 34,

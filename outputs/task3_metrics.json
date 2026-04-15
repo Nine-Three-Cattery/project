@@ -30,10 +30,10 @@
     "Other": 25
   },
   "source_distribution": {
-    "direct_review": 200
+    "llm_review": 200
   },
   "labeling_method": {
-    "source": "direct_review",
+    "source": "llm_review",
     "kind": "llm_assisted_with_external_audit",
     "summary_path": "outputs/task3_label_review_summary.json"
   },

@@ -41,7 +41,7 @@ The retrieval comparison shows a narrow BM25 advantage overall, but the result i
 - Labeling method: `llm_assisted_with_external_audit`
 
 - Review tag: `direct_review_v2`
-- Corrected labels after direct review: `19`
+- Corrected labels after LLM-assisted review: `19`
 
 - Additional changes from the previous reviewed release: `13`
 - Baseline test accuracy / macro-F1: `0.8667` / `0.8561`
