@@ -1,12 +1,12 @@
 # COMP 4221 NLP 课程项目
 
-英文版说明请见 [README.md](/Users/nagato/workspace/project/README.md)。
+英文版说明请见 [README.md](README.md)。
 
 本仓库完整实现了 noisy news corpus 作业要求的项目流程：
 
 - Task 1：语料审计与轻量预处理
 - Task 2：基于 unigram TF-IDF 和 BM25 的文档检索
-- Task 3：六分类主题分类，并在直接人工复核的基础上加入外部大模型共识辅助审计
+- Task 3：六分类主题分类，采用多模型 LLM 辅助标注并由外部模型交叉审计
 
 整个项目采用“脚本优先、可复现优先”的组织方式。一次完整运行后，作业要求的主要产物都会保存在仓库中。
 
@@ -192,10 +192,11 @@ bash scripts/bootstrap_task3_labels.sh
   - `Crime/Law`
   - `Culture/Entertainment`
   - `Other`
-- 当前发布标签集经历了两轮处理：
-  - 第一轮：逐篇直接人工复核
-  - 第二轮：针对外部大模型一致异议样本的人工作裁决更新
-- 这使得当前 Task 3 标签质量强于早期 bootstrap-only 和 direct-review-only 版本，但它仍然不是多人类仲裁的 gold labels。
+- 当前发布标签集经历了三阶段处理：
+  - 第一阶段：BM25 关键词匹配生成初始种子标签
+  - 第二阶段：GPT-5.4（Codex）逐篇阅读全文后确认或修正标签
+  - 第三阶段：Gemini 2.5 Flash 和 Grok 4.20 独立审计全部 200 条标签，一致异议样本被重新裁决
+- 这是一套多模型 LLM 辅助标注流水线，而非传统人工标注。其优势是可复现、可审计、有交叉质量检查；局限在于所有标注者都是 LLM，可能存在共享的系统偏差。
 - 数据切分固定为 stratified `70/15/15`，随机种子 `42`。
 - baseline 模型为 `CountVectorizer + MultinomialNB`。
 - improved 模型为 `TfidfVectorizer(ngram_range=(1, 2), min_df=2, sublinear_tf=True) + LinearSVC`。
@@ -314,7 +315,7 @@ bash scripts/package_submission.sh
 - `sample.txt` 已复制到 `data/raw/` 中，方便与原始作业环境保持一致。
 - 检索 judgments 采用 query-document 粒度的 canonical qrels，因此重复跑排序时不会依赖旧结果顺序。
 - qrels 会自动和当前 top-5 结果进行校验，校验结果保存在 `outputs/retrieval_results/` 下。
-- Task 3 标签经过“人工复核 + 外部大模型一致异议再裁决”，因此它可以被准确表述为一种共识辅助的标注质量控制流程，而不应被夸大成 multi-human gold annotation。
+- Task 3 标签经过"BM25 种子 + GPT-5.4 复核 + 外部多模型交叉审计"三阶段流水线，是一种 LLM 辅助标注方案。其优势是可复现、可审计；局限在于不等价于人工 gold annotation，且 LLM 标签可能对词汇特征有系统偏好，进而使下游 bag-of-words 分类器的准确率偏高。
 - 早期 Task 3 bootstrap 参数仍保存在 `configs/task3_bootstrap.yaml` 中，仅作为历史和对照用途。
 - 可选外部审计流程会把 provider-specific 结果单独存储，不会覆盖正式标签。
 - `requirements.txt` 锁顶层依赖，`requirements-lock.txt` 与 `.python-version` 提供更强的环境冻结能力。

@@ -1,12 +1,12 @@
 # COMP 4221 NLP Course Project
 
-Chinese version: see [README.zh-CN.md](/Users/nagato/workspace/project/README.zh-CN.md).
+Chinese version: see [README.zh-CN.md](README.zh-CN.md).
 
 This repository implements the full course project workflow for the noisy news corpus assignment:
 
 - Task 1: corpus audit and light preprocessing
 - Task 2: document retrieval with unigram TF-IDF and BM25
-- Task 3: small supervised topic classification with a directly reviewed six-label dataset refined through a consensus-assisted external LLM audit
+- Task 3: small supervised topic classification with LLM-assisted six-label annotation and cross-provider external audit
 
 The project is organized as a script-first, reproducible pipeline. All generated artifacts that are required by the assignment are stored in the repository after a successful run.
 

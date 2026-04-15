@@ -2,9 +2,37 @@
 
 ## Purpose
 
-This guideline defines the six topic labels used for Track A topic classification. The goal is to make annotation decisions consistent enough that another reader could reproduce the label assignment logic on the same corpus. The released `trackA_labels.jsonl` file reflects a direct review pass over the selected 200 documents followed by a second adjudication pass over unanimous external-audit disagreements, rather than the earlier bootstrap-only seed labels.
+This guideline defines the six topic labels used for Track A topic classification and documents the LLM-assisted annotation pipeline that produced the released label set.
 
-## General Rules
+## Annotation Pipeline
+
+The 200 topic labels were produced through a three-stage LLM-assisted pipeline rather than single-human manual annotation:
+
+### Stage 1: Seed Generation
+
+`bootstrap_task3_labels.py` uses BM25 topic-query matching to assign initial high-confidence labels. For each of the five named topic categories, a keyword query is scored against the full corpus. Documents with a clear margin between the best and second-best topic score are assigned to the winning category. The lowest-scoring documents are assigned to `Other`. The configuration is stored in `configs/task3_bootstrap.yaml`.
+
+### Stage 2: Primary Review (GPT-5.4 / Codex)
+
+GPT-5.4, the model driving OpenAI Codex, reviewed each of the 200 documents in full. For each document, the model read the complete article text and either confirmed or corrected the bootstrap seed label. The resulting labels were tagged as `source: direct_review` with `annotation_method: direct_document_review`.
+
+### Stage 3: Cross-Provider External Audit
+
+Two independent external models audited all 200 labels without seeing the current assignments:
+
+- **Gemini 2.5 Flash** (Google Vertex AI) — agreement rate with released labels: 93.5%
+- **Grok 4.20** (xAI) — agreement rate with released labels: 95.5%
+- **Cross-provider agreement** (Gemini vs Grok): 90.5%
+
+Documents where both external auditors unanimously agreed on a label different from the released one were flagged for re-adjudication. The 13 resulting corrections are recorded in `configs/task3_review_updates.yaml`. These re-adjudicated labels are tagged with `annotation_method: direct_document_review_with_external_llm_audit`.
+
+### Limitations
+
+- All three annotators are LLMs. Shared systematic biases (e.g., preferring more salient topics, struggling with mixed-topic roundup articles) may exist.
+- The pipeline is reproducible and auditable, but it does not constitute adjudicated multi-human gold labels.
+- The cross-provider agreement rate (90.5%) provides an indirect quality signal but not a direct guarantee of correctness.
+
+## General Labeling Rules
 
 - Assign exactly one label to each document.
 - Label the document according to its dominant news angle, not just the first named entity.
@@ -94,5 +122,5 @@ Common examples:
 ## Revision Log
 
 - Version 1.0: Established the six-label scheme with `Crime/Law` separated from `Other` because the corpus contains enough policing, courts, and prison-related coverage to justify a dedicated category.
-- Version 1.1: Applied a direct review pass over the released 200-document label set and corrected the small set of bootstrap labels whose dominant topic did not match the article after full reading.
-- Version 1.2: Re-adjudicated the subset of documents for which independent external LLM reviewers unanimously disagreed with the released label, producing the `direct_review_v2` label set.
+- Version 1.1: Applied BM25 bootstrap seed labels and GPT-5.4 primary review over the 200-document label set.
+- Version 1.2: Re-adjudicated the subset of documents for which independent external LLM reviewers (Gemini 2.5 Flash and Grok 4.20) unanimously disagreed with the released label, producing the `direct_review_v2` label set.
