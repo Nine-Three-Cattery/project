@@ -182,6 +182,9 @@ Notes:
 - The split is stratified 70/15/15 with `random_state=42`.
 - The baseline model is `CountVectorizer + MultinomialNB`.
 - The improved model is `TfidfVectorizer(ngram_range=(1, 2), min_df=2, sublinear_tf=True) + LinearSVC`.
+- A **label noise robustness test** randomly flips 5–30% of train labels and retrains, confirming that macro-F1 degrades monotonically (0.933 → 0.853), which validates that the classifier learns genuine topic signal.
+- A **per-class F1 breakdown** identifies which categories are hardest for the bag-of-words classifier.
+- **Systematic error pattern analysis** extracts dominant TF-IDF terms from misclassified documents, pooling test and dev errors, with pair-specific domain insights.
 
 ### Optional Task 3 External LLM Audit
 
@@ -243,7 +246,7 @@ Notes:
 ## Final Report
 
 ```bash
-python3 -m src.build_final_report
+$PYTHON -m src.build_final_report
 ```
 
 Generated artifacts:
@@ -264,8 +267,8 @@ bash scripts/prepare_submission.sh
 Validation is also available as a standalone command:
 
 ```bash
-python3 -m src.verify_submission --root .
-python3 -m src.verify_submission --root submission
+$PYTHON -m src.verify_submission --root .
+$PYTHON -m src.verify_submission --root submission
 ```
 
 To create a ready-to-upload archive after the clean submission bundle exists, run:
@@ -301,5 +304,7 @@ bash scripts/package_submission.sh
 - The earlier Task 3 bootstrap parameters still live in `configs/task3_bootstrap.yaml`, but that seed-generation recipe is no longer the authoritative label source.
 - The optional Task 3 external-audit workflow stores provider-specific review outputs separately from the released label file so second-pass checks never overwrite the authoritative dataset.
 - `requirements.txt` pins top-level dependencies, while `requirements-lock.txt` and `.python-version` provide a stronger frozen environment snapshot when needed.
+- All shell scripts source `scripts/detect_python.sh` to automatically find a Python ≥ 3.10 interpreter (checking venv, Homebrew, and system in order). Override with `PYTHON=/path/to/python3` if needed.
 - `scripts/prepare_submission.sh` creates a clean `submission/` bundle after rebuilding outputs and stripping cache artifacts.
 - The code includes detailed English comments and docstrings, and the repository intentionally avoids notebooks in favor of scriptable workflows.
+- Task 2 analysis includes **per-query case studies** showing actual top-3 retrieved documents for the best BM25 and TF-IDF advantage queries, with content-specific explanations of why each model wins.

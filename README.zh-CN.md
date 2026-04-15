@@ -200,6 +200,9 @@ bash scripts/bootstrap_task3_labels.sh
 - 数据切分固定为 stratified `70/15/15`，随机种子 `42`。
 - baseline 模型为 `CountVectorizer + MultinomialNB`。
 - improved 模型为 `TfidfVectorizer(ngram_range=(1, 2), min_df=2, sublinear_tf=True) + LinearSVC`。
+- **标签噪声鲁棒性测试**：随机翻转 5–30% 的训练标签后重训，确认 macro-F1 单调下降（0.933 → 0.853），验证分类器学到了真实的主题信号。
+- **逐类 F1 分析**：展示每个类别的 F1 分数，识别 bag-of-words 分类器最难区分的类别。
+- **系统性错误模式分析**：从误分类文档中提取主导 TF-IDF 关键词，合并 test + dev 错误样本，提供每对混淆类别的领域级解释。
 
 ### 可选：Task 3 外部大模型审计
 
@@ -261,7 +264,7 @@ bash scripts/run_task3_external_audit.sh
 ## 最终总报告
 
 ```bash
-python3 -m src.build_final_report
+$PYTHON -m src.build_final_report
 ```
 
 生成：
@@ -282,8 +285,8 @@ bash scripts/prepare_submission.sh
 也可以单独做校验：
 
 ```bash
-python3 -m src.verify_submission --root .
-python3 -m src.verify_submission --root submission
+$PYTHON -m src.verify_submission --root .
+$PYTHON -m src.verify_submission --root submission
 ```
 
 若要在 `submission/` 准备好之后再打一个可上传压缩包：
@@ -319,5 +322,7 @@ bash scripts/package_submission.sh
 - 早期 Task 3 bootstrap 参数仍保存在 `configs/task3_bootstrap.yaml` 中，仅作为历史和对照用途。
 - 可选外部审计流程会把 provider-specific 结果单独存储，不会覆盖正式标签。
 - `requirements.txt` 锁顶层依赖，`requirements-lock.txt` 与 `.python-version` 提供更强的环境冻结能力。
+- 所有 shell 脚本通过 `scripts/detect_python.sh` 自动检测 Python ≥ 3.10 解释器（依次检查 venv、Homebrew、系统 Python）。如需指定，可设环境变量 `PYTHON=/path/to/python3`。
 - `scripts/prepare_submission.sh` 会在重建产物后生成干净的 `submission/` 目录。
 - 整个项目尽量保持脚本化和可复现，不依赖 notebook。
+- Task 2 分析包含 **逐查询案例研究**：展示 BM25 和 TF-IDF 各自优势最大的查询的 top-3 检索结果，并附带基于实际文档内容的模型优劣分析。
