@@ -1,0 +1,70 @@
+{
+  "query_id": "q02",
+  "text": "Which documents discuss police brutality, prison violence, criminal charges, or court-related investigations?",
+  "results": {
+    "tfidf": [
+      {
+        "rank": 1,
+        "doc_id": "4133941",
+        "score": 0.13990656362740317,
+        "snippet": "As a result , the Atlanta Police Department beat cop says she watches her \" six \" - or rear - a little more diligently ."
+      },
+      {
+        "rank": 2,
+        "doc_id": "4137241",
+        "score": 0.1229247629606272,
+        "snippet": "Rape suspect caught in Florida Police said a fugitive wanted on rape and attempted homicide charges in Beaver County was arrested Monday in Florida , where he had been released from prison late last year ."
+      },
+      {
+        "rank": 3,
+        "doc_id": "3004541",
+        "score": 0.12242107801468949,
+        "snippet": "As tough sentencing laws have swelled prison populations , some 26 states have private companies operating or building prisons , which can often be built faster than public prisons ."
+      },
+      {
+        "rank": 4,
+        "doc_id": "5024041",
+        "score": 0.10481526294485707,
+        "snippet": "Suit accuses Detroit police board of meeting in secret A suit filed Wednesday by community activist Robert Davis alleges the Board of Police Commissioners has been meeting privately with high-level staff members of the Detroit Police Department to di"
+      },
+      {
+        "rank": 5,
+        "doc_id": "5016741",
+        "score": 0.09886349921317443,
+        "snippet": "Perhaps -- but that will now be up to courts to decide , if and when a fatal police shooting becomes the subject of a lawsuit or a criminal prosecution ."
+      }
+    ],
+    "bm25": [
+      {
+        "rank": 1,
+        "doc_id": "4137241",
+        "score": 26.66258036695565,
+        "snippet": "Rape suspect caught in Florida Police said a fugitive wanted on rape and attempted homicide charges in Beaver County was arrested Monday in Florida , where he had been released from prison late last year ."
+      },
+      {
+        "rank": 2,
+        "doc_id": "4128641",
+        "score": 25.124631836421454,
+        "snippet": "\" Only in the AJC To find out what agencies seize and how they use the proceeds , The Atlanta Journal-Constitution analyzed more than a thousand pages of documents obtained through Freedom of Information Act requests and a website at the University o"
+      },
+      {
+        "rank": 3,
+        "doc_id": "4090541",
+        "score": 23.32006900561871,
+        "snippet": "A paper game To avoid seizures and shutdowns , ring members repeatedly transferred business ownerships or property after past crackdowns , deftly playing a paper game that left some city and state officials frustrated and clamoring for stronger laws"
+      },
+      {
+        "rank": 4,
+        "doc_id": "3001441",
+        "score": 22.916388822500625,
+        "snippet": "Police Commissioner Howard Safir declined to discuss the specifics of the indictment or to detail what role Officer Schwarz is accused of playing ."
+      },
+      {
+        "rank": 5,
+        "doc_id": "4113741",
+        "score": 22.356109218948912,
+        "snippet": "# Asked about the monitoring , police spokesman Paul Browne provided a list of 12 people arrested or convicted on terrorism charges in the United States and abroad who had once been members of Muslim student associations , which the NYPD referred to"
+      }
+    ]
+  }
+}

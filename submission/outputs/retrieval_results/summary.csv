@@ -1,0 +1,2 @@
+evaluated_queries,avg_tfidf_p_at_5,avg_bm25_p_at_5,baseline_wins,improved_wins,ties
+10,0.76,0.78,3,3,4

@@ -1,0 +1,11 @@
+source: bootstrapped
+tag: bootstrap_bm25_margin_v1
+margin_threshold: 10.0
+top_n_per_topic: 34
+other_count: 30
+label_queries:
+  Politics: government election congress president senate policy political campaign diplomacy administration lawmakers voters minister mayor governor
+  Business/Economy: economy economic market markets business company companies inflation trade stocks earnings revenue finance investor investors jobs federal reserve bank banks
+  Sports: basketball baseball football golf boxing soccer tennis hockey olympics tournament championship season player players coach team teams game games match matches score scored athlete athletes
+  Crime/Law: police court courts judge judges jury prison jail criminal crime charged charges arrest arrested trial lawsuit lawsuits prosecutor prosecutors investigation violence abuse prison inmate inmates
+  Culture/Entertainment: movie movies film films television tv theater theatre broadway actor actress actors music musician musicians book books author authors novel novels show shows entertainment arts dance musical review

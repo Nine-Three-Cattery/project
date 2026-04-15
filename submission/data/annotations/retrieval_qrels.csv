@@ -1,0 +1,81 @@
+Query_ID,Query,Doc_ID,Is_Relevant
+q01,"Which articles report on basketball, boxing, golf, baseball, or other sports competitions and athlete performance?",3000041,Y
+q01,"Which articles report on basketball, boxing, golf, baseball, or other sports competitions and athlete performance?",3031741,Y
+q01,"Which articles report on basketball, boxing, golf, baseball, or other sports competitions and athlete performance?",3032641,Y
+q01,"Which articles report on basketball, boxing, golf, baseball, or other sports competitions and athlete performance?",3034541,N
+q01,"Which articles report on basketball, boxing, golf, baseball, or other sports competitions and athlete performance?",3040541,Y
+q01,"Which articles report on basketball, boxing, golf, baseball, or other sports competitions and athlete performance?",3041741,N
+q01,"Which articles report on basketball, boxing, golf, baseball, or other sports competitions and athlete performance?",3049341,N
+q01,"Which articles report on basketball, boxing, golf, baseball, or other sports competitions and athlete performance?",3055441,Y
+q01,"Which articles report on basketball, boxing, golf, baseball, or other sports competitions and athlete performance?",4023941,Y
+q02,"Which documents discuss police brutality, prison violence, criminal charges, or court-related investigations?",3001441,Y
+q02,"Which documents discuss police brutality, prison violence, criminal charges, or court-related investigations?",3004541,Y
+q02,"Which documents discuss police brutality, prison violence, criminal charges, or court-related investigations?",4090541,Y
+q02,"Which documents discuss police brutality, prison violence, criminal charges, or court-related investigations?",4113741,N
+q02,"Which documents discuss police brutality, prison violence, criminal charges, or court-related investigations?",4128641,Y
+q02,"Which documents discuss police brutality, prison violence, criminal charges, or court-related investigations?",4133941,N
+q02,"Which documents discuss police brutality, prison violence, criminal charges, or court-related investigations?",4137241,Y
+q02,"Which documents discuss police brutality, prison violence, criminal charges, or court-related investigations?",5016741,Y
+q02,"Which documents discuss police brutality, prison violence, criminal charges, or court-related investigations?",5024041,Y
+q03,"Which articles focus on elections, government decisions, political parties, or debates over public policy?",3004441,Y
+q03,"Which articles focus on elections, government decisions, political parties, or debates over public policy?",3004841,Y
+q03,"Which articles focus on elections, government decisions, political parties, or debates over public policy?",3009441,Y
+q03,"Which articles focus on elections, government decisions, political parties, or debates over public policy?",3025841,Y
+q03,"Which articles focus on elections, government decisions, political parties, or debates over public policy?",3047741,Y
+q03,"Which articles focus on elections, government decisions, political parties, or debates over public policy?",3066741,Y
+q03,"Which articles focus on elections, government decisions, political parties, or debates over public policy?",3069841,Y
+q03,"Which articles focus on elections, government decisions, political parties, or debates over public policy?",4132841,Y
+q03,"Which articles focus on elections, government decisions, political parties, or debates over public policy?",4197041,Y
+q04,"Which reports discuss the economy, inflation, business conditions, markets, trade, or corporate finances?",3009441,Y
+q04,"Which reports discuss the economy, inflation, business conditions, markets, trade, or corporate finances?",3030341,Y
+q04,"Which reports discuss the economy, inflation, business conditions, markets, trade, or corporate finances?",3036041,Y
+q04,"Which reports discuss the economy, inflation, business conditions, markets, trade, or corporate finances?",3040041,Y
+q04,"Which reports discuss the economy, inflation, business conditions, markets, trade, or corporate finances?",3045441,Y
+q04,"Which reports discuss the economy, inflation, business conditions, markets, trade, or corporate finances?",3065841,Y
+q04,"Which reports discuss the economy, inflation, business conditions, markets, trade, or corporate finances?",4022741,Y
+q05,"Which articles cover movies, television, theater, books, or entertainment industry figures?",3005041,Y
+q05,"Which articles cover movies, television, theater, books, or entertainment industry figures?",3005341,Y
+q05,"Which articles cover movies, television, theater, books, or entertainment industry figures?",3016841,Y
+q05,"Which articles cover movies, television, theater, books, or entertainment industry figures?",3018541,N
+q05,"Which articles cover movies, television, theater, books, or entertainment industry figures?",3040841,Y
+q05,"Which articles cover movies, television, theater, books, or entertainment industry figures?",3048941,N
+q05,"Which articles cover movies, television, theater, books, or entertainment industry figures?",3062141,Y
+q05,"Which articles cover movies, television, theater, books, or entertainment industry figures?",4061241,Y
+q05,"Which articles cover movies, television, theater, books, or entertainment industry figures?",4135441,N
+q06,"Which documents discuss school policy, universities, college admissions, or education reform?",3006441,Y
+q06,"Which documents discuss school policy, universities, college admissions, or education reform?",3008641,Y
+q06,"Which documents discuss school policy, universities, college admissions, or education reform?",3017041,Y
+q06,"Which documents discuss school policy, universities, college admissions, or education reform?",3031541,Y
+q06,"Which documents discuss school policy, universities, college admissions, or education reform?",3069541,Y
+q06,"Which documents discuss school policy, universities, college admissions, or education reform?",4113741,N
+q06,"Which documents discuss school policy, universities, college admissions, or education reform?",4186341,Y
+q07,"Which articles are about public transportation, transit planning, traffic systems, or infrastructure projects?",3049841,N
+q07,"Which articles are about public transportation, transit planning, traffic systems, or infrastructure projects?",3057541,Y
+q07,"Which articles are about public transportation, transit planning, traffic systems, or infrastructure projects?",4116941,Y
+q07,"Which articles are about public transportation, transit planning, traffic systems, or infrastructure projects?",4189541,Y
+q07,"Which articles are about public transportation, transit planning, traffic systems, or infrastructure projects?",4197941,Y
+q07,"Which articles are about public transportation, transit planning, traffic systems, or infrastructure projects?",5022141,Y
+q08,"Which reports discuss health, counseling, hospitals, or personal well-being?",3001241,Y
+q08,"Which reports discuss health, counseling, hospitals, or personal well-being?",3001341,Y
+q08,"Which reports discuss health, counseling, hospitals, or personal well-being?",3032441,N
+q08,"Which reports discuss health, counseling, hospitals, or personal well-being?",3039341,Y
+q08,"Which reports discuss health, counseling, hospitals, or personal well-being?",3045441,Y
+q08,"Which reports discuss health, counseling, hospitals, or personal well-being?",3057841,N
+q08,"Which reports discuss health, counseling, hospitals, or personal well-being?",4135841,N
+q08,"Which reports discuss health, counseling, hospitals, or personal well-being?",5021741,N
+q09,"Which documents cover technology, the internet, bots, digital devices, or software-driven change?",3006041,Y
+q09,"Which documents cover technology, the internet, bots, digital devices, or software-driven change?",3017441,Y
+q09,"Which documents cover technology, the internet, bots, digital devices, or software-driven change?",3049741,Y
+q09,"Which documents cover technology, the internet, bots, digital devices, or software-driven change?",3071141,Y
+q09,"Which documents cover technology, the internet, bots, digital devices, or software-driven change?",4137141,N
+q09,"Which documents cover technology, the internet, bots, digital devices, or software-driven change?",4198241,Y
+q10,"Which articles describe charities, social services, food pantries, or community support programs?",3009741,N
+q10,"Which articles describe charities, social services, food pantries, or community support programs?",3032341,N
+q10,"Which articles describe charities, social services, food pantries, or community support programs?",3047541,Y
+q10,"Which articles describe charities, social services, food pantries, or community support programs?",3051741,N
+q10,"Which articles describe charities, social services, food pantries, or community support programs?",3055541,N
+q10,"Which articles describe charities, social services, food pantries, or community support programs?",3068041,N
+q10,"Which articles describe charities, social services, food pantries, or community support programs?",4132041,Y
+q10,"Which articles describe charities, social services, food pantries, or community support programs?",4135041,N
+q10,"Which articles describe charities, social services, food pantries, or community support programs?",5015441,N
+q10,"Which articles describe charities, social services, food pantries, or community support programs?",5015741,Y

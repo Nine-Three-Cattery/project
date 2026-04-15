@@ -1,0 +1,70 @@
+{
+  "query_id": "q10",
+  "text": "Which articles describe charities, social services, food pantries, or community support programs?",
+  "results": {
+    "tfidf": [
+      {
+        "rank": 1,
+        "doc_id": "3051741",
+        "score": 0.07981755800472808,
+        "snippet": "\" Social Security by the numbers 36 Number of campaign stops made by President Bush to push his Social Security proposals ( since the 2004 election ) 12 Number of GOP Senate Finance Committee caucuses ( through Thursday ) 2017 Year the Social Securit"
+      },
+      {
+        "rank": 2,
+        "doc_id": "5015741",
+        "score": 0.06007873105700967,
+        "snippet": "The 10 nominees come from diverse backgrounds , and include representatives from public health , parenting and education groups , child welfare experts and those who have used or been involved with DCFS services ."
+      },
+      {
+        "rank": 3,
+        "doc_id": "3009741",
+        "score": 0.05282558155905006,
+        "snippet": "\" The oil-for-food deal is based on UN Security Council Resolution 986 , which allows Iraq to sell $ 2 billion worth of oil every six months ."
+      },
+      {
+        "rank": 4,
+        "doc_id": "5015441",
+        "score": 0.05275009580716104,
+        "snippet": "Several dry dog food brands have excessive and potentially toxic levels of vitamin D , according to the U.S."
+      },
+      {
+        "rank": 5,
+        "doc_id": "3055541",
+        "score": 0.05032403980881765,
+        "snippet": "That is not to say that there are not reasonable and affordable services at these spas , or that such services are not available elsewhere and at lower prices ."
+      }
+    ],
+    "bm25": [
+      {
+        "rank": 1,
+        "doc_id": "4132041",
+        "score": 21.041103304308884,
+        "snippet": "Donations of non-perishable or canned food items will be accepted in the lobby and will be donated to local food banks and charities ."
+      },
+      {
+        "rank": 2,
+        "doc_id": "3047541",
+        "score": 19.335699126713667,
+        "snippet": "\" A lot of Republicans argued for volunteerism as a substitute for cuts in social services -- which is totally inadequate , \" said Pablo Eisenberg , director of the Center for Community Change , a national nonprofit policy organization ."
+      },
+      {
+        "rank": 3,
+        "doc_id": "3068041",
+        "score": 17.64174194629608,
+        "snippet": "Clinton 's explanations of her public conduct in Arkansas and Washington were just sort of putting her best foot forward as a social crusader , not as a tough lawyer or a canny commodity speculator , not that there is anything wrong with either of th"
+      },
+      {
+        "rank": 4,
+        "doc_id": "3032341",
+        "score": 15.06193857011367,
+        "snippet": "Fujimori 's campaign crafted an image to take advantage of what polling firms describe as a growing affinity here for things Japanese , which are seen as advanced and efficient ."
+      },
+      {
+        "rank": 5,
+        "doc_id": "4135041",
+        "score": 14.962448716873954,
+        "snippet": "Those policy holders are often shocked to discover that their policies have annual benefit limits of as little as $1,000 or $2,000 , not enough to cover a single night in a hospital ."
+      }
+    ]
+  }
+}

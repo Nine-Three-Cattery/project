@@ -1,0 +1,19 @@
+labels:
+  - key: p
+    name: Politics
+    definition: Coverage of governments, elections, legislation, diplomacy, public policy, and politically framed debates.
+  - key: b
+    name: Business/Economy
+    definition: Coverage of companies, markets, trade, jobs, finance, inflation, regulation with a business angle, and broader economic conditions.
+  - key: s
+    name: Sports
+    definition: Coverage of games, matches, tournaments, athletes, leagues, teams, or sports performance.
+  - key: c
+    name: Crime/Law
+    definition: Coverage of criminal accusations, police activity, courts, prisons, legal investigations, sentencing, or public safety incidents.
+  - key: e
+    name: Culture/Entertainment
+    definition: Coverage of film, television, theater, books, music, celebrities, arts institutions, and cultural criticism.
+  - key: o
+    name: Other
+    definition: Coverage that does not fit the five topical labels above or is too mixed to assign confidently.

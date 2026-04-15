@@ -1,0 +1,70 @@
+{
+  "query_id": "q08",
+  "text": "Which reports discuss health, counseling, hospitals, or personal well-being?",
+  "results": {
+    "tfidf": [
+      {
+        "rank": 1,
+        "doc_id": "4135841",
+        "score": 0.06489489343445043,
+        "snippet": "\" We believe that such information is critical to the safety of both law enforcement personnel and the person being sought for questioning , \" said Mike Manko , spokesman for the Allegheny County district office is working with other prosecutors and"
+      },
+      {
+        "rank": 2,
+        "doc_id": "3001241",
+        "score": 0.06390167182564283,
+        "snippet": "Now , the pharmaceutical industry finds itself under siege from insurers , hospitals , Congress and the Clinton Administration , which calls the containment of health-care costs a major priority in its fight to reduce the Federal deficit ."
+      },
+      {
+        "rank": 3,
+        "doc_id": "3039341",
+        "score": 0.06034847164809702,
+        "snippet": "24 , hundreds of hospitals , a half-dozen major unions and even some public health departments have refused to participate ."
+      },
+      {
+        "rank": 4,
+        "doc_id": "3045441",
+        "score": 0.05929000263150023,
+        "snippet": "The real big trouble -- and the big money -- could be in the nation 's health care costs , which account for We see that the overall health care system is in crisis , but there is not a lot being done , \" said Amri Johnson , founder and chief executi"
+      },
+      {
+        "rank": 5,
+        "doc_id": "5021741",
+        "score": 0.0579820908629046,
+        "snippet": "Walker issued a series of tweets Tuesday morning complaining about the ad , which also accuses Walker of putting his personal political ambitions above the best interests of Wisconsin residents ."
+      }
+    ],
+    "bm25": [
+      {
+        "rank": 1,
+        "doc_id": "3057841",
+        "score": 15.232049488196356,
+        "snippet": "Federal and local officials are expected to begin recovering the dead in those areas , as well as in swamped portions of Old Metairie and around Airline Highway , today or Saturday while workers restore utilities so Jefferson can become a staging are"
+      },
+      {
+        "rank": 2,
+        "doc_id": "3001241",
+        "score": 14.372382664510178,
+        "snippet": "Now , the pharmaceutical industry finds itself under siege from insurers , hospitals , Congress and the Clinton Administration , which calls the containment of health-care costs a major priority in its fight to reduce the Federal deficit ."
+      },
+      {
+        "rank": 3,
+        "doc_id": "3045441",
+        "score": 13.978668564282032,
+        "snippet": "The real big trouble -- and the big money -- could be in the nation 's health care costs , which account for We see that the overall health care system is in crisis , but there is not a lot being done , \" said Amri Johnson , founder and chief executi"
+      },
+      {
+        "rank": 4,
+        "doc_id": "3032441",
+        "score": 13.922592728619627,
+        "snippet": "Iraqi leader Saddam Hussein urged President Bush today to seek a peaceful solution to the Persian Gulf crisis or face global \" disaster , \" while Foreign Minister Tariq Aziz stressed Iraq 's willingness to talk to the United States as long as a withd"
+      },
+      {
+        "rank": 5,
+        "doc_id": "3001341",
+        "score": 13.866042685974561,
+        "snippet": "Last fall 's food strikes were prompted by reports of planned reductions in classes , counseling service and in \" time to 9 P.M."
+      }
+    ]
+  }
+}

@@ -1,0 +1,121 @@
+{
+  "source": "direct_review",
+  "tag": "direct_review_v2",
+  "reviewed_at": "2026-04-15",
+  "annotation_method": "direct_document_review_with_external_llm_audit",
+  "review_scope": "single_reviewer_adjudication_over_consensus_external_disagreements",
+  "based_on_previous_tag": "direct_review_v1",
+  "updates_config_path": "configs/task3_review_updates.yaml",
+  "initial_source_distribution": {
+    "bootstrapped": 200
+  },
+  "final_source_distribution": {
+    "direct_review": 200
+  },
+  "initial_label_distribution": {
+    "Politics": 34,
+    "Business/Economy": 34,
+    "Sports": 34,
+    "Crime/Law": 34,
+    "Culture/Entertainment": 34,
+    "Other": 30
+  },
+  "previous_release_label_distribution": {
+    "Politics": 38,
+    "Business/Economy": 31,
+    "Sports": 33,
+    "Crime/Law": 31,
+    "Culture/Entertainment": 34,
+    "Other": 33
+  },
+  "final_label_distribution": {
+    "Politics": 43,
+    "Business/Economy": 32,
+    "Sports": 32,
+    "Crime/Law": 31,
+    "Culture/Entertainment": 37,
+    "Other": 25
+  },
+  "changed_label_count": 19,
+  "additional_changes_from_previous_release": 13,
+  "changed_labels": [
+    {
+      "doc_id": "3008641",
+      "old_label": "Other",
+      "new_label": "Business/Economy",
+      "reason": "The article is fundamentally about tuition, public funding, affordability, and the economic burden of higher education rather than general education policy."
+    },
+    {
+      "doc_id": "3041741",
+      "old_label": "Sports",
+      "new_label": "Culture/Entertainment",
+      "reason": "This is a cultural and moral interview about the social meaning of sports, not coverage of games, teams, or athletic performance."
+    },
+    {
+      "doc_id": "3056541",
+      "old_label": "Sports",
+      "new_label": "Crime/Law",
+      "reason": "The dominant narrative is a deadly riot, property destruction, police response, and public safety fallout after the match rather than the match itself."
+    },
+    {
+      "doc_id": "3064841",
+      "old_label": "Other",
+      "new_label": "Culture/Entertainment",
+      "reason": "The document is a dining-critic roundup of restaurant reviews, which is a form of cultural criticism and lifestyle entertainment coverage."
+    },
+    {
+      "doc_id": "4061341",
+      "old_label": "Other",
+      "new_label": "Culture/Entertainment",
+      "reason": "This is a restaurant review focused on dining experience, chef profile, and cultural criticism rather than a mixed lifestyle brief."
+    },
+    {
+      "doc_id": "4114141",
+      "old_label": "Business/Economy",
+      "new_label": "Politics",
+      "reason": "Although the bill concerns loans and guaranties, the story is framed around legislative maneuvering, votes, lobbying, and public-policy debate."
+    },
+    {
+      "doc_id": "4114241",
+      "old_label": "Crime/Law",
+      "new_label": "Politics",
+      "reason": "The article centers on a governor, an election, a judicial appointment, and the political implications of an earlier investigation."
+    },
+    {
+      "doc_id": "4115641",
+      "old_label": "Crime/Law",
+      "new_label": "Politics",
+      "reason": "The article is primarily about U.S. foreign-policy positioning and international legitimacy around the ICC warrant, not a detailed legal proceeding report."
+    },
+    {
+      "doc_id": "4134441",
+      "old_label": "Other",
+      "new_label": "Politics",
+      "reason": "The document is dominated by state legislation, school-governance policy, public funding, and official reactions, which fits politics/public policy."
+    },
+    {
+      "doc_id": "4136141",
+      "old_label": "Other",
+      "new_label": "Sports",
+      "reason": "The text is entirely composed of football statistics, player performance tables, and game results."
+    },
+    {
+      "doc_id": "4190441",
+      "old_label": "Other",
+      "new_label": "Business/Economy",
+      "reason": "This is a consumer-business complaint column centered on Verizon billing and service accountability."
+    },
+    {
+      "doc_id": "5016441",
+      "old_label": "Other",
+      "new_label": "Politics",
+      "reason": "The school-calendar story is driven by the governor's directive, school-board action, and public-policy choices about official holidays and makeup days."
+    },
+    {
+      "doc_id": "5022441",
+      "old_label": "Other",
+      "new_label": "Crime/Law",
+      "reason": "Even though the article includes vigil coverage, it is still anchored in a fatal fire, an active public-safety investigation, and case-related official updates."
+    }
+  ]
+}
