@@ -3,5 +3,6 @@ set -euo pipefail
 
 PROJECT_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$PROJECT_ROOT"
+source scripts/detect_python.sh
 
-python3 -m src.task1_preprocess "$@"
+$PYTHON -m src.task1_preprocess "$@"
