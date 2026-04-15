@@ -1,7 +1,7 @@
 {
   "source": "bootstrapped",
   "tag": "bootstrap_bm25_margin_v1",
-  "corpus_path": "/Users/nagato/workspace/project/data/processed/text_news_cleaned.jsonl",
+  "corpus_path": "data/processed/text_news_cleaned.jsonl",
   "margin_threshold": 10.0,
   "top_n_per_topic": 34,
   "other_count": 30,
@@ -235,5 +235,5 @@
     ]
   },
   "other_max_score_cutoff": 2.366286,
-  "config_path": "/Users/nagato/workspace/project/configs/task3_bootstrap.yaml"
+  "config_path": "configs/task3_bootstrap.yaml"
 }

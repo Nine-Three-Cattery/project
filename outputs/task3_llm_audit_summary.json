@@ -1,5 +1,5 @@
 {
-  "comparison_label_source": "/Users/nagato/workspace/project/data/annotations/trackA_labels.jsonl",
+  "comparison_label_source": "data/annotations/trackA_labels.jsonl",
   "providers": {
     "vertex": {
       "provider": "vertex",

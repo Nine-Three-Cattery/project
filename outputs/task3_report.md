@@ -21,8 +21,9 @@
 
 ### Evaluation Caveat
 
-- The released label set was reviewed document by document and then re-adjudicated on a subset of cases with unanimous external LLM disagreement.
-- The reported scores are therefore stronger than the earlier direct-review-only release, but they still do not constitute adjudicated multi-human gold labels.
+- The released label set was produced by a multi-model LLM-assisted pipeline: BM25 seed generation, GPT-5.4 primary review, and cross-provider audit by Gemini 2.5 Flash and Grok 4.20.
+- Documents with unanimous external disagreement were re-adjudicated (13 corrections recorded in `configs/task3_review_updates.yaml`).
+- This approach provides reproducible, auditable labels with cross-model quality checks, but does not constitute adjudicated multi-human gold labels.
 
 ## Model Configuration
 

@@ -34,8 +34,8 @@
   },
   "labeling_method": {
     "source": "direct_review",
-    "kind": "single_reviewer_curated_with_external_llm_audit",
-    "summary_path": "/Users/nagato/workspace/project/outputs/task3_label_review_summary.json"
+    "kind": "llm_assisted_with_external_audit",
+    "summary_path": "outputs/task3_label_review_summary.json"
   },
   "top_confusions": [
     {
