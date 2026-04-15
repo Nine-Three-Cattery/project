@@ -1,0 +1,44 @@
+{
+  "queries": [
+    {
+      "query_id": "q01",
+      "text": "Which articles report on basketball, boxing, golf, baseball, or other sports competitions and athlete performance?"
+    },
+    {
+      "query_id": "q02",
+      "text": "Which documents discuss police brutality, prison violence, criminal charges, or court-related investigations?"
+    },
+    {
+      "query_id": "q03",
+      "text": "Which articles focus on elections, government decisions, political parties, or debates over public policy?"
+    },
+    {
+      "query_id": "q04",
+      "text": "Which reports discuss the economy, inflation, business conditions, markets, trade, or corporate finances?"
+    },
+    {
+      "query_id": "q05",
+      "text": "Which articles cover movies, television, theater, books, or entertainment industry figures?"
+    },
+    {
+      "query_id": "q06",
+      "text": "Which documents discuss school policy, universities, college admissions, or education reform?"
+    },
+    {
+      "query_id": "q07",
+      "text": "Which articles are about public transportation, transit planning, traffic systems, or infrastructure projects?"
+    },
+    {
+      "query_id": "q08",
+      "text": "Which reports discuss health, counseling, hospitals, or personal well-being?"
+    },
+    {
+      "query_id": "q09",
+      "text": "Which documents cover technology, the internet, bots, digital devices, or software-driven change?"
+    },
+    {
+      "query_id": "q10",
+      "text": "Which articles describe charities, social services, food pantries, or community support programs?"
+    }
+  ]
+}

@@ -1,0 +1,70 @@
+{
+  "baseline": {
+    "dev": {
+      "accuracy": 0.8666666666666667,
+      "macro_f1": 0.7686091686091686
+    },
+    "test": {
+      "accuracy": 0.8666666666666667,
+      "macro_f1": 0.856060606060606
+    }
+  },
+  "improved": {
+    "selected_c": 1.0,
+    "dev": {
+      "accuracy": 0.9333333333333333,
+      "macro_f1": 0.9252525252525253
+    },
+    "test": {
+      "accuracy": 0.9333333333333333,
+      "macro_f1": 0.9329966329966329
+    }
+  },
+  "dataset_size": 200,
+  "label_distribution": {
+    "Politics": 43,
+    "Culture/Entertainment": 37,
+    "Sports": 32,
+    "Business/Economy": 32,
+    "Crime/Law": 31,
+    "Other": 25
+  },
+  "source_distribution": {
+    "direct_review": 200
+  },
+  "labeling_method": {
+    "source": "direct_review",
+    "kind": "single_reviewer_curated_with_external_llm_audit",
+    "summary_path": "/Users/nagato/workspace/project/outputs/task3_label_review_summary.json"
+  },
+  "top_confusions": [
+    {
+      "gold_label": "Crime/Law",
+      "predicted_label": "Other",
+      "count": 1,
+      "examples": [
+        {
+          "doc_id": "5022441",
+          "gold_label": "Crime/Law",
+          "predicted_label": "Other",
+          "snippet": "Posted ! A link has been posted to your Facebook feed . Buy Photo Natasha Radosavac , Steve 's sister , center , lights candles for others at a vigil for the Radosavac family near their home that burned in Eastpointe . P..."
+        }
+      ],
+      "source": "improved test set"
+    },
+    {
+      "gold_label": "Politics",
+      "predicted_label": "Crime/Law",
+      "count": 1,
+      "examples": [
+        {
+          "doc_id": "4114241",
+          "gold_label": "Politics",
+          "predicted_label": "Crime/Law",
+          "snippet": "In the final , frenetic days of Georgia 's 2010 GOP runoff , a bombshell dropped : word that a federal grand jury in Atlanta demanded information seemingly related to Nathan Deal 's actions as a member of Congress . # Th..."
+        }
+      ],
+      "source": "improved test set"
+    }
+  ]
+}

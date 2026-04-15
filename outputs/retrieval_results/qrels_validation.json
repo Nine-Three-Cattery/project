@@ -1,0 +1,73 @@
+{
+  "passed": true,
+  "qrels_rows": 80,
+  "unique_query_doc_pairs": 80,
+  "result_rows_checked": 100,
+  "covered_result_rows": 100,
+  "missing_qrels_count": 0,
+  "judgment_mismatch_count": 0,
+  "missing_qrels_examples": [],
+  "judgment_mismatch_examples": [],
+  "per_query": [
+    {
+      "query_id": "q01",
+      "judged_documents": 9,
+      "top5_unique_documents": 9,
+      "covered_top5_documents": 9
+    },
+    {
+      "query_id": "q02",
+      "judged_documents": 9,
+      "top5_unique_documents": 9,
+      "covered_top5_documents": 9
+    },
+    {
+      "query_id": "q03",
+      "judged_documents": 9,
+      "top5_unique_documents": 9,
+      "covered_top5_documents": 9
+    },
+    {
+      "query_id": "q04",
+      "judged_documents": 7,
+      "top5_unique_documents": 7,
+      "covered_top5_documents": 7
+    },
+    {
+      "query_id": "q05",
+      "judged_documents": 9,
+      "top5_unique_documents": 9,
+      "covered_top5_documents": 9
+    },
+    {
+      "query_id": "q06",
+      "judged_documents": 7,
+      "top5_unique_documents": 7,
+      "covered_top5_documents": 7
+    },
+    {
+      "query_id": "q07",
+      "judged_documents": 6,
+      "top5_unique_documents": 6,
+      "covered_top5_documents": 6
+    },
+    {
+      "query_id": "q08",
+      "judged_documents": 8,
+      "top5_unique_documents": 8,
+      "covered_top5_documents": 8
+    },
+    {
+      "query_id": "q09",
+      "judged_documents": 6,
+      "top5_unique_documents": 6,
+      "covered_top5_documents": 6
+    },
+    {
+      "query_id": "q10",
+      "judged_documents": 10,
+      "top5_unique_documents": 10,
+      "covered_top5_documents": 10
+    }
+  ]
+}
