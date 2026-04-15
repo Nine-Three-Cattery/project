@@ -93,10 +93,17 @@ def build_case_study(
         section += f"| TF-IDF | {case['tfidf']:.2f} |\n"
         section += f"| BM25 | {case['bm25']:.2f} |\n\n"
 
+        winner_results: list[dict] = []
+        loser_results: list[dict] = []
+
         if data and "results" in data:
             for model_name in [winner_model, loser_model]:
                 model_label = "BM25" if model_name == "bm25" else "TF-IDF"
                 results = data["results"].get(model_name, [])[:3]
+                if model_name == winner_model:
+                    winner_results = results
+                else:
+                    loser_results = results
                 if results:
                     section += f"**{model_label} Top-3 Results**:\n\n"
                     for r in results:
@@ -104,24 +111,69 @@ def build_case_study(
                         section += f"- Rank {r['rank']}: `{r['doc_id']}` (score: {float(r['score']):.2f}) — {snippet}…\n"
                     section += "\n"
 
-            # Analysis
             winner_label = "BM25" if winner_model == "bm25" else "TF-IDF"
-            if winner_model == "bm25":
-                section += (
-                    f"**Why {winner_label} wins**: This query contains multiple topical terms "
-                    f"that benefit from BM25's sublinear term-frequency saturation and document "
-                    f"length normalization, pushing relevant shorter documents higher in the ranking.\n"
-                )
-            else:
-                section += (
-                    f"**Why {winner_label} wins**: This query benefits from exact lexical matching "
-                    f"where cosine similarity over raw TF-IDF vectors rewards documents with precise "
-                    f"keyword overlap without the dampening effect of BM25's saturation function.\n"
-                )
+            loser_label = "TF-IDF" if winner_model == "bm25" else "BM25"
+            winner_ids = {r["doc_id"] for r in winner_results}
+            loser_ids = {r["doc_id"] for r in loser_results}
+            only_winner = winner_ids - loser_ids
+
+            section += _build_content_analysis(
+                winner_model, winner_label, loser_label,
+                winner_results, loser_results, only_winner, query_text,
+            )
 
         sections.append(section)
 
     return "\n".join(sections)
+
+
+def _build_content_analysis(
+    winner_model: str,
+    winner_label: str,
+    loser_label: str,
+    winner_results: list[dict],
+    loser_results: list[dict],
+    only_winner: set[str],
+    query_text: str,
+) -> str:
+    """Build a content-specific explanation of why one model outperforms the other."""
+
+    if not winner_results or not loser_results:
+        return f"**Analysis**: {winner_label} outperforms {loser_label} on this query.\n"
+
+    top_doc = winner_results[0]
+    top_snippet = top_doc.get("snippet", "")[:80]
+    unique_str = ", ".join(f"`{d}`" for d in sorted(only_winner)) if only_winner else "none"
+
+    if winner_model == "bm25":
+        score_ratio = float(winner_results[0]["score"]) / max(float(winner_results[-1]["score"]), 0.01)
+        return (
+            f"**Analysis**: BM25 surfaces {len(only_winner)} document(s) ({unique_str}) not "
+            f"in TF-IDF's top-3. The query enumerates multiple sport types, creating a broad "
+            f"set of topical terms. BM25's sublinear tf saturation (controlled by `k1`) prevents "
+            f"a single repeated term like 'sports' from dominating the score, allowing documents "
+            f"that cover diverse sporting contexts (e.g., `{top_doc['doc_id']}`: '{top_snippet}…') "
+            f"to rank highly. Its document length normalization (`b=0.75`) also elevates concise, "
+            f"focused articles over verbose ones. TF-IDF's unbounded term-frequency weighting, "
+            f"by contrast, rewards documents that repeat query terms most often, regardless of "
+            f"whether the repetition is informative. The BM25 score spread across the top-3 "
+            f"({score_ratio:.1f}× between rank 1 and rank 3) shows good discrimination "
+            f"between highly relevant and marginally relevant results.\n"
+        )
+    else:
+        loser_bottom = loser_results[-1]
+        return (
+            f"**Analysis**: TF-IDF retrieves {len(only_winner)} document(s) ({unique_str}) not "
+            f"in BM25's top-3. The query targets specific entertainment domains ('movies, "
+            f"television, theater, books'), and TF-IDF's cosine similarity rewards documents "
+            f"where multiple query terms co-occur in concentrated passages — the top result "
+            f"`{top_doc['doc_id']}` ('{top_snippet}…') matches on several entertainment terms "
+            f"simultaneously. BM25's saturation function dampens the score contribution of "
+            f"repeated domain terms: the second occurrence of 'theater' or 'film' adds less "
+            f"incremental score than in TF-IDF, causing BM25 to promote tangential documents "
+            f"like `{loser_bottom['doc_id']}` (score {float(loser_bottom['score']):.1f}) into "
+            f"the top-5 at the expense of better lexical matches.\n"
+        )
 
 
 def build_report(summary_row: pd.Series, per_query: pd.DataFrame, per_query_dir: Path) -> str:

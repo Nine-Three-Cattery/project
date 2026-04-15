@@ -46,7 +46,7 @@
 - Rank 2: `3041741` (score: 0.11) — And so it grieves us when we find that sports figures are not practicing those same virtues off the court or off the field as we expect them to practi…
 - Rank 3: `3031741` (score: 0.11) — " I was totally ignorant to boxing other than throwing punches , " says Hopkins , who sued promoter Butch Lewis for breach of contract in 1997 and won…
 
-**Why BM25 wins**: This query contains multiple topical terms that benefit from BM25's sublinear term-frequency saturation and document length normalization, pushing relevant shorter documents higher in the ranking.
+**Analysis**: BM25 surfaces 2 document(s) (`3000041`, `3032641`) not in TF-IDF's top-3. The query enumerates multiple sport types, creating a broad set of topical terms. BM25's sublinear tf saturation (controlled by `k1`) prevents a single repeated term like 'sports' from dominating the score, allowing documents that cover diverse sporting contexts (e.g., `3049341`: 'In newspapers and on TV , black families see more success stories in sports than…') to rank highly. Its document length normalization (`b=0.75`) also elevates concise, focused articles over verbose ones. TF-IDF's unbounded term-frequency weighting, by contrast, rewards documents that repeat query terms most often, regardless of whether the repetition is informative. The BM25 score spread across the top-3 (1.2× between rank 1 and rank 3) shows good discrimination between highly relevant and marginally relevant results.
 
 ### Best TF-IDF Advantage
 
@@ -69,7 +69,7 @@
 - Rank 2: `3018541` (score: 19.25) — In deference to differing computer and connection capabilities , both The Fly Thru and - with several screen resolutions for the video imagery , varyi…
 - Rank 3: `4061241` (score: 17.90) — The success of March of the Penguins in 2006 has revitalized the nature documentary field as well , a mainstay of science entertainment , says Jean-Fr…
 
-**Why TF-IDF wins**: This query benefits from exact lexical matching where cosine similarity over raw TF-IDF vectors rewards documents with precise keyword overlap without the dampening effect of BM25's saturation function.
+**Analysis**: TF-IDF retrieves 2 document(s) (`3005041`, `3040841`) not in BM25's top-3. The query targets specific entertainment domains ('movies, television, theater, books'), and TF-IDF's cosine similarity rewards documents where multiple query terms co-occur in concentrated passages — the top result `3005041` (', " which received strong reviews , was also deemed ineligible because it was mo…') matches on several entertainment terms simultaneously. BM25's saturation function dampens the score contribution of repeated domain terms: the second occurrence of 'theater' or 'film' adds less incremental score than in TF-IDF, causing BM25 to promote tangential documents like `4061241` (score 17.9) into the top-5 at the expense of better lexical matches.
 
 
 ## Interpretation

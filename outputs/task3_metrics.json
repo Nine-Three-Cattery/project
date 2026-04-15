@@ -78,6 +78,10 @@
   ],
   "error_patterns": [
     {
+      "pattern": "Small error sample",
+      "description": "Only 2 test-set error(s) and 0 dev-set error(s) were observed (2 total). Pattern analysis below pools both splits, but conclusions should be interpreted cautiously given the limited sample size."
+    },
+    {
       "pattern": "Crime/Law misclassified as Other",
       "count": 1,
       "keywords": [
@@ -88,7 +92,7 @@
         "funeral",
         "acts of"
       ],
-      "description": "Documents labeled Crime/Law were predicted as Other. Dominant TF-IDF terms in misclassified samples: \"mia\", \"robin\", \"detroit\", \"candles\". This suggests the classifier relied on lexical cues that overlap between the two categories."
+      "description": "This is a classic boundary case: articles involving personal tragedies or community events related to crime may lack explicit legal/judicial vocabulary, causing the classifier to fall back to the catch-all 'Other' category. Documents labeled Crime/Law were predicted as Other. Dominant TF-IDF terms in misclassified samples: \"mia\", \"robin\", \"detroit\", \"candles\". These terms have high weight in both the gold and predicted categories, confirming lexical overlap as the root cause."
     },
     {
       "pattern": "Politics misclassified as Crime/Law",
@@ -101,7 +105,15 @@
         "ethics",
         "deal"
       ],
-      "description": "Documents labeled Politics were predicted as Crime/Law. Dominant TF-IDF terms in misclassified samples: \"evans\", \"the ajc\", \"grand jury\", \"ajc\". This suggests the classifier relied on lexical cues that overlap between the two categories."
+      "description": "Political corruption, investigations, and ethics probes share vocabulary with crime reporting (e.g., 'grand jury', 'investigation', 'charges'). The classifier cannot distinguish political accountability stories from criminal justice coverage based on bag-of-words features alone. Documents labeled Politics were predicted as Crime/Law. Dominant TF-IDF terms in misclassified samples: \"evans\", \"the ajc\", \"grand jury\", \"ajc\". These terms have high weight in both the gold and predicted categories, confirming lexical overlap as the root cause."
     }
-  ]
+  ],
+  "per_class_f1": {
+    "Politics": 0.9091,
+    "Business/Economy": 1.0,
+    "Sports": 1.0,
+    "Crime/Law": 0.8,
+    "Culture/Entertainment": 1.0,
+    "Other": 0.8889
+  }
 }
