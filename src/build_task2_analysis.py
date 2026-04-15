@@ -1,0 +1,114 @@
+"""Build a reproducible Task 2 analysis report from retrieval evaluation outputs."""
+
+from __future__ import annotations
+
+import argparse
+from pathlib import Path
+
+import pandas as pd
+
+from src.utils.constants import RETRIEVAL_PER_QUERY_SCORES_PATH, RETRIEVAL_SUMMARY_PATH, TASK2_ANALYSIS_PATH
+from src.utils.reporting import write_text
+
+
+def build_argument_parser() -> argparse.ArgumentParser:
+    """Create the CLI for Task 2 analysis report generation."""
+
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument(
+        "--summary-input",
+        type=Path,
+        default=RETRIEVAL_SUMMARY_PATH,
+        help="Path to the aggregate retrieval summary CSV.",
+    )
+    parser.add_argument(
+        "--per-query-input",
+        type=Path,
+        default=RETRIEVAL_PER_QUERY_SCORES_PATH,
+        help="Path to the per-query Precision@5 CSV.",
+    )
+    parser.add_argument(
+        "--output",
+        type=Path,
+        default=TASK2_ANALYSIS_PATH,
+        help="Path to the markdown Task 2 analysis report.",
+    )
+    return parser
+
+
+def select_case(per_query: pd.DataFrame, metric_column: str) -> pd.Series:
+    """Return the row with the largest positive advantage for one retrieval model."""
+
+    if per_query.empty:
+        raise ValueError("Per-query retrieval score table is empty.")
+
+    best_index = per_query[metric_column].idxmax()
+    return per_query.loc[best_index]
+
+
+def build_report(summary_row: pd.Series, per_query: pd.DataFrame) -> str:
+    """Render a markdown retrieval analysis from current evaluation artifacts."""
+
+    per_query = per_query.copy()
+    per_query["bm25_margin"] = per_query["bm25"] - per_query["tfidf"]
+    per_query["tfidf_margin"] = per_query["tfidf"] - per_query["bm25"]
+
+    bm25_case = select_case(per_query, "bm25_margin")
+    tfidf_case = select_case(per_query, "tfidf_margin")
+    strongest_tie = per_query.loc[(per_query["winner"] == "tie"), ["Query", "bm25"]]
+    tie_line = (
+        f"- Strongest tie: `{strongest_tie.sort_values('bm25', ascending=False).iloc[0]['Query']}` "
+        f"at `P@5={strongest_tie.sort_values('bm25', ascending=False).iloc[0]['bm25']:.2f}`"
+        if not strongest_tie.empty
+        else "- No ties were observed."
+    )
+
+    return f"""# Task 2 Retrieval Analysis
+
+## Setup
+
+- Baseline: unigram TF-IDF with cosine similarity
+- Improved variant: BM25 using the same tokenizer as the baseline
+- Queries judged: {int(summary_row["evaluated_queries"])}
+- Results judged per query and model: top 5
+
+## Precision@5 Summary
+
+| Metric | Value |
+| --- | ---: |
+| Average TF-IDF Precision@5 | {summary_row["avg_tfidf_p_at_5"]:.2f} |
+| Average BM25 Precision@5 | {summary_row["avg_bm25_p_at_5"]:.2f} |
+| TF-IDF query wins | {int(summary_row["baseline_wins"])} |
+| BM25 query wins | {int(summary_row["improved_wins"])} |
+| Ties | {int(summary_row["ties"])} |
+
+## Query-Level Highlights
+
+- Best BM25 advantage: `{bm25_case["Query"]}` with BM25 `P@5={bm25_case["bm25"]:.2f}` versus TF-IDF `P@5={bm25_case["tfidf"]:.2f}`
+- Best TF-IDF advantage: `{tfidf_case["Query"]}` with TF-IDF `P@5={tfidf_case["tfidf"]:.2f}` versus BM25 `P@5={tfidf_case["bm25"]:.2f}`
+{tie_line}
+
+## Interpretation
+
+BM25 holds a small average lead in this corpus, but the comparison is not one-sided. BM25 performs best when a query is dense with topical terms that can benefit from length normalization and softer term-frequency saturation. TF-IDF remains competitive when success depends on sharp lexical overlap between the information need and a narrow set of documents. The final result is therefore a meaningful but modest improvement rather than a blanket dominance claim.
+"""
+
+
+def main() -> None:
+    """Build the current Task 2 analysis report from CSV artifacts."""
+
+    args = build_argument_parser().parse_args()
+
+    summary = pd.read_csv(args.summary_input)
+    per_query = pd.read_csv(args.per_query_input)
+    if summary.empty:
+        raise ValueError("Retrieval summary CSV is empty.")
+
+    report = build_report(summary.iloc[0], per_query)
+    write_text(args.output, report)
+
+    print(f"Saved Task 2 analysis report to {args.output}.")
+
+
+if __name__ == "__main__":
+    main()
