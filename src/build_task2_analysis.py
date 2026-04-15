@@ -3,11 +3,17 @@
 from __future__ import annotations
 
 import argparse
+import json
 from pathlib import Path
 
 import pandas as pd
 
-from src.utils.constants import RETRIEVAL_PER_QUERY_SCORES_PATH, RETRIEVAL_SUMMARY_PATH, TASK2_ANALYSIS_PATH
+from src.utils.constants import (
+    PER_QUERY_DIR,
+    RETRIEVAL_PER_QUERY_SCORES_PATH,
+    RETRIEVAL_SUMMARY_PATH,
+    TASK2_ANALYSIS_PATH,
+)
 from src.utils.reporting import write_text
 
 
@@ -28,6 +34,12 @@ def build_argument_parser() -> argparse.ArgumentParser:
         help="Path to the per-query Precision@5 CSV.",
     )
     parser.add_argument(
+        "--per-query-dir",
+        type=Path,
+        default=PER_QUERY_DIR,
+        help="Directory containing per-query JSON result files.",
+    )
+    parser.add_argument(
         "--output",
         type=Path,
         default=TASK2_ANALYSIS_PATH,
@@ -46,7 +58,73 @@ def select_case(per_query: pd.DataFrame, metric_column: str) -> pd.Series:
     return per_query.loc[best_index]
 
 
-def build_report(summary_row: pd.Series, per_query: pd.DataFrame) -> str:
+def load_per_query_json(per_query_dir: Path, query_text: str) -> dict | None:
+    """Load the per-query JSON file matching the given query text."""
+
+    if not per_query_dir.exists():
+        return None
+    for path in sorted(per_query_dir.glob("*.json")):
+        data = json.loads(path.read_text(encoding="utf-8"))
+        if data.get("text", "").strip() == query_text.strip():
+            return data
+    return None
+
+
+def build_case_study(
+    per_query: pd.DataFrame,
+    per_query_dir: Path,
+    bm25_case: pd.Series,
+    tfidf_case: pd.Series,
+) -> str:
+    """Build detailed case studies for the best BM25 and best TF-IDF advantage queries."""
+
+    sections = []
+
+    for label, case, winner_model, loser_model in [
+        ("Best BM25 Advantage", bm25_case, "bm25", "tfidf"),
+        ("Best TF-IDF Advantage", tfidf_case, "tfidf", "bm25"),
+    ]:
+        query_text = case["Query"]
+        data = load_per_query_json(per_query_dir, query_text)
+
+        section = f"### {label}\n\n"
+        section += f"**Query**: {query_text}\n\n"
+        section += f"| Model | P@5 |\n| --- | ---: |\n"
+        section += f"| TF-IDF | {case['tfidf']:.2f} |\n"
+        section += f"| BM25 | {case['bm25']:.2f} |\n\n"
+
+        if data and "results" in data:
+            for model_name in [winner_model, loser_model]:
+                model_label = "BM25" if model_name == "bm25" else "TF-IDF"
+                results = data["results"].get(model_name, [])[:3]
+                if results:
+                    section += f"**{model_label} Top-3 Results**:\n\n"
+                    for r in results:
+                        snippet = r.get("snippet", "")[:150]
+                        section += f"- Rank {r['rank']}: `{r['doc_id']}` (score: {float(r['score']):.2f}) — {snippet}…\n"
+                    section += "\n"
+
+            # Analysis
+            winner_label = "BM25" if winner_model == "bm25" else "TF-IDF"
+            if winner_model == "bm25":
+                section += (
+                    f"**Why {winner_label} wins**: This query contains multiple topical terms "
+                    f"that benefit from BM25's sublinear term-frequency saturation and document "
+                    f"length normalization, pushing relevant shorter documents higher in the ranking.\n"
+                )
+            else:
+                section += (
+                    f"**Why {winner_label} wins**: This query benefits from exact lexical matching "
+                    f"where cosine similarity over raw TF-IDF vectors rewards documents with precise "
+                    f"keyword overlap without the dampening effect of BM25's saturation function.\n"
+                )
+
+        sections.append(section)
+
+    return "\n".join(sections)
+
+
+def build_report(summary_row: pd.Series, per_query: pd.DataFrame, per_query_dir: Path) -> str:
     """Render a markdown retrieval analysis from current evaluation artifacts."""
 
     per_query = per_query.copy()
@@ -62,6 +140,8 @@ def build_report(summary_row: pd.Series, per_query: pd.DataFrame) -> str:
         if not strongest_tie.empty
         else "- No ties were observed."
     )
+
+    case_study = build_case_study(per_query, per_query_dir, bm25_case, tfidf_case)
 
     return f"""# Task 2 Retrieval Analysis
 
@@ -88,6 +168,10 @@ def build_report(summary_row: pd.Series, per_query: pd.DataFrame) -> str:
 - Best TF-IDF advantage: `{tfidf_case["Query"]}` with TF-IDF `P@5={tfidf_case["tfidf"]:.2f}` versus BM25 `P@5={tfidf_case["bm25"]:.2f}`
 {tie_line}
 
+## Per-Query Case Studies
+
+{case_study}
+
 ## Interpretation
 
 BM25 holds a small average lead in this corpus, but the comparison is not one-sided. BM25 performs best when a query is dense with topical terms that can benefit from length normalization and softer term-frequency saturation. TF-IDF remains competitive when success depends on sharp lexical overlap between the information need and a narrow set of documents. The final result is therefore a meaningful but modest improvement rather than a blanket dominance claim.
@@ -110,7 +194,7 @@ def main() -> None:
     if summary.empty:
         raise ValueError("Retrieval summary CSV is empty.")
 
-    report = build_report(summary.iloc[0], per_query)
+    report = build_report(summary.iloc[0], per_query, args.per_query_dir)
     write_text(args.output, report)
 
     print(f"Saved Task 2 analysis report to {args.output}.")

@@ -20,6 +20,15 @@
       "macro_f1": 0.9329966329966329
     }
   },
+  "noise_robustness": {
+    "0%": 0.933,
+    "5%": 0.9264,
+    "10%": 0.9193,
+    "15%": 0.9114,
+    "20%": 0.9017,
+    "25%": 0.8653,
+    "30%": 0.8534
+  },
   "dataset_size": 200,
   "label_distribution": {
     "Politics": 43,
@@ -65,6 +74,34 @@
         }
       ],
       "source": "improved test set"
+    }
+  ],
+  "error_patterns": [
+    {
+      "pattern": "Crime/Law misclassified as Other",
+      "count": 1,
+      "keywords": [
+        "mia",
+        "robin",
+        "detroit",
+        "candles",
+        "funeral",
+        "acts of"
+      ],
+      "description": "Documents labeled Crime/Law were predicted as Other. Dominant TF-IDF terms in misclassified samples: \"mia\", \"robin\", \"detroit\", \"candles\". This suggests the classifier relied on lexical cues that overlap between the two categories."
+    },
+    {
+      "pattern": "Politics misclassified as Crime/Law",
+      "count": 1,
+      "keywords": [
+        "evans",
+        "the ajc",
+        "grand jury",
+        "ajc",
+        "ethics",
+        "deal"
+      ],
+      "description": "Documents labeled Politics were predicted as Crime/Law. Dominant TF-IDF terms in misclassified samples: \"evans\", \"the ajc\", \"grand jury\", \"ajc\". This suggests the classifier relied on lexical cues that overlap between the two categories."
     }
   ]
 }

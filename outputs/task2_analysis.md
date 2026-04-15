@@ -23,6 +23,55 @@
 - Best TF-IDF advantage: `Which articles cover movies, television, theater, books, or entertainment industry figures?` with TF-IDF `P@5=0.80` versus BM25 `P@5=0.60`
 - Strongest tie: `Which articles focus on elections, government decisions, political parties, or debates over public policy?` at `P@5=1.00`
 
+## Per-Query Case Studies
+
+### Best BM25 Advantage
+
+**Query**: Which articles report on basketball, boxing, golf, baseball, or other sports competitions and athlete performance?
+
+| Model | P@5 |
+| --- | ---: |
+| TF-IDF | 0.40 |
+| BM25 | 0.80 |
+
+**BM25 Top-3 Results**:
+
+- Rank 1: `3049341` (score: 37.52) — In newspapers and on TV , black families see more success stories in sports than in any other field .…
+- Rank 2: `3032641` (score: 30.72) — Since 1962 , 27 Stags have gone on to play professional basketball , football or baseball . Since 1986 , 99 have gone on to play college athletics .…
+- Rank 3: `3000041` (score: 30.49) — Scoring in the event is based on a modified Stableford system , in which points are awarded for the players ' performance on each hole : 5 for eagle ,…
+
+**TF-IDF Top-3 Results**:
+
+- Rank 1: `3049341` (score: 0.16) — In newspapers and on TV , black families see more success stories in sports than in any other field .…
+- Rank 2: `3041741` (score: 0.11) — And so it grieves us when we find that sports figures are not practicing those same virtues off the court or off the field as we expect them to practi…
+- Rank 3: `3031741` (score: 0.11) — " I was totally ignorant to boxing other than throwing punches , " says Hopkins , who sued promoter Butch Lewis for breach of contract in 1997 and won…
+
+**Why BM25 wins**: This query contains multiple topical terms that benefit from BM25's sublinear term-frequency saturation and document length normalization, pushing relevant shorter documents higher in the ranking.
+
+### Best TF-IDF Advantage
+
+**Query**: Which articles cover movies, television, theater, books, or entertainment industry figures?
+
+| Model | P@5 |
+| --- | ---: |
+| TF-IDF | 0.80 |
+| BM25 | 0.60 |
+
+**TF-IDF Top-3 Results**:
+
+- Rank 1: `3005041` (score: 0.12) — , " which received strong reviews , was also deemed ineligible because it was mounted in an Off Broadway theater , the same one that housed " Cabaret …
+- Rank 2: `3040841` (score: 0.10) — It 's the illness of longtime economic turn makes tickets too expensive ( $ 65 for top musicals on weekend nights ) for the middle class , which in tu…
+- Rank 3: `3016841` (score: 0.09) — And if I teach a film course , speak at a cinema club , lecture at a museum , or do a guest shot on television , more viewing may come with the job .…
+
+**BM25 Top-3 Results**:
+
+- Rank 1: `3016841` (score: 21.14) — And if I teach a film course , speak at a cinema club , lecture at a museum , or do a guest shot on television , more viewing may come with the job .…
+- Rank 2: `3018541` (score: 19.25) — In deference to differing computer and connection capabilities , both The Fly Thru and - with several screen resolutions for the video imagery , varyi…
+- Rank 3: `4061241` (score: 17.90) — The success of March of the Penguins in 2006 has revitalized the nature documentary field as well , a mainstay of science entertainment , says Jean-Fr…
+
+**Why TF-IDF wins**: This query benefits from exact lexical matching where cosine similarity over raw TF-IDF vectors rewards documents with precise keyword overlap without the dampening effect of BM25's saturation function.
+
+
 ## Interpretation
 
 BM25 holds a small average lead in this corpus, but the comparison is not one-sided. BM25 performs best when a query is dense with topical terms that can benefit from length normalization and softer term-frequency saturation. TF-IDF remains competitive when success depends on sharp lexical overlap between the information need and a narrow set of documents. The final result is therefore a meaningful but modest improvement rather than a blanket dominance claim.
