@@ -22,6 +22,7 @@ from src.utils.constants import (
     CONFUSION_MATRIX_PATH,
     DEFAULT_RANDOM_SEED,
     LABELS_PATH,
+    PROJECT_ROOT,
     SPLIT_PATH,
     TASK3_LABELS,
     TASK3_BOOTSTRAP_SUMMARY_PATH,
@@ -266,6 +267,14 @@ def select_top_confusions(confusions: list[dict], limit: int = 3) -> list[dict]:
     return confusions[:limit]
 
 
+def _relative_path(path) -> str:
+    """Return a portable project-relative path string."""
+    try:
+        return str(path.relative_to(PROJECT_ROOT))
+    except (ValueError, AttributeError):
+        return str(path)
+
+
 def infer_labeling_method(
     source_distribution: dict[str, int],
     annotation_methods: set[str],
@@ -277,19 +286,19 @@ def infer_labeling_method(
         if any("external_llm_audit" in method for method in annotation_methods):
             return {
                 "source": "direct_review",
-                "kind": "single_reviewer_curated_with_external_llm_audit",
-                "summary_path": str(TASK3_LABEL_REVIEW_SUMMARY_PATH),
+                "kind": "llm_assisted_with_external_audit",
+                "summary_path": _relative_path(TASK3_LABEL_REVIEW_SUMMARY_PATH),
             }
         return {
             "source": "direct_review",
-            "kind": "single_reviewer_curated",
-            "summary_path": str(TASK3_LABEL_REVIEW_SUMMARY_PATH),
+            "kind": "llm_assisted",
+            "summary_path": _relative_path(TASK3_LABEL_REVIEW_SUMMARY_PATH),
         }
     if sources == {"bootstrapped"}:
         return {
             "source": "bootstrapped",
             "kind": "weak_supervision",
-            "summary_path": str(TASK3_BOOTSTRAP_SUMMARY_PATH),
+            "summary_path": _relative_path(TASK3_BOOTSTRAP_SUMMARY_PATH),
         }
     return {
         "source": "mixed",
@@ -320,15 +329,16 @@ def build_report(
     annotation_methods = set(dataset["annotation_method"].astype(str))
     labeling_method = infer_labeling_method(source_distribution, annotation_methods)
 
-    if labeling_method["kind"] == "single_reviewer_curated_with_external_llm_audit":
+    if labeling_method["kind"] == "llm_assisted_with_external_audit":
         caveat_lines = [
-            "- The released label set was reviewed document by document and then re-adjudicated on a subset of cases with unanimous external LLM disagreement.",
-            "- The reported scores are therefore stronger than the earlier direct-review-only release, but they still do not constitute adjudicated multi-human gold labels.",
+            "- The released label set was produced by a multi-model LLM-assisted pipeline: BM25 seed generation, GPT-5.4 primary review, and cross-provider audit by Gemini 2.5 Flash and Grok 4.20.",
+            "- Documents with unanimous external disagreement were re-adjudicated (13 corrections recorded in `configs/task3_review_updates.yaml`).",
+            "- This approach provides reproducible, auditable labels with cross-model quality checks, but does not constitute adjudicated multi-human gold labels.",
         ]
-    elif labeling_method["source"] == "direct_review":
+    elif labeling_method["kind"] == "llm_assisted":
         caveat_lines = [
-            "- The released label set was reviewed document by document in a single-reviewer pass.",
-            "- The reported scores are therefore stronger than the earlier bootstrap-only results, but they still reflect one-reviewer judgments rather than adjudicated multi-annotator gold labels.",
+            "- The released label set was produced by an LLM-assisted pipeline: BM25 seed generation followed by GPT-5.4 primary review.",
+            "- The reported scores reflect model-driven labeling rather than human annotator judgments.",
         ]
     elif labeling_method["source"] == "bootstrapped":
         caveat_lines = [

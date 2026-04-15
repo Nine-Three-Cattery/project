@@ -12,6 +12,7 @@ from rank_bm25 import BM25Okapi
 
 from src.utils.constants import (
     CLEANED_JSONL_PATH,
+    PROJECT_ROOT,
     TASK3_BOOTSTRAP_LABELS_PATH,
     TASK3_BOOTSTRAP_CONFIG_PATH,
     TASK3_BOOTSTRAP_SUMMARY_PATH,
@@ -183,10 +184,15 @@ def build_bootstrap_labels(
 
     label_rows.sort(key=lambda row: (row["label"], row["doc_id"]))
 
+    try:
+        relative_corpus = str(corpus_path.relative_to(PROJECT_ROOT))
+    except (ValueError, AttributeError):
+        relative_corpus = str(corpus_path)
+
     summary = {
         "source": source,
         "tag": tag,
-        "corpus_path": str(corpus_path),
+        "corpus_path": relative_corpus,
         "margin_threshold": margin_threshold,
         "top_n_per_topic": top_n_per_topic,
         "other_count": other_count,
@@ -227,7 +233,10 @@ def main() -> None:
         top_n_per_topic=top_n_per_topic,
         other_count=other_count,
     )
-    summary["config_path"] = str(args.config)
+    try:
+        summary["config_path"] = str(args.config.relative_to(PROJECT_ROOT))
+    except (ValueError, AttributeError):
+        summary["config_path"] = str(args.config)
 
     write_jsonl(args.output, label_rows)
     ensure_parent_dir(args.summary_output)

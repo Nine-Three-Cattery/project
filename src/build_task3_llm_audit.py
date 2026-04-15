@@ -9,6 +9,7 @@ from pathlib import Path
 
 from src.utils.constants import (
     LABELS_PATH,
+    PROJECT_ROOT,
     TASK3_EXTERNAL_REVIEWS_DIR,
     TASK3_LABELS,
     TASK3_LLM_AUDIT_JSON_PATH,
@@ -269,8 +270,12 @@ def main() -> None:
         provider_name: summarize_provider(rows, current_labels)
         for provider_name, rows in provider_rows.items()
     }
+    try:
+        relative_labels = str(args.labels.relative_to(PROJECT_ROOT))
+    except ValueError:
+        relative_labels = str(args.labels)
     summary = {
-        "comparison_label_source": str(args.labels),
+        "comparison_label_source": relative_labels,
         "providers": provider_summaries,
         "cross_provider": build_cross_provider_summary(provider_rows, current_labels),
     }
