@@ -3,7 +3,7 @@
   "tag": "direct_review_v2",
   "reviewed_at": "2026-04-15",
   "annotation_method": "direct_document_review_with_external_llm_audit",
-  "review_scope": "single_reviewer_adjudication_over_consensus_external_disagreements",
+  "review_scope": "llm_assisted_adjudication_over_consensus_external_disagreements",
   "based_on_previous_tag": "direct_review_v1",
   "updates_config_path": "configs/task3_review_updates.yaml",
   "initial_source_distribution": {

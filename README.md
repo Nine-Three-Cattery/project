@@ -38,7 +38,7 @@ project/
 ├── .python-version
 ├── configs/
 │   ├── task3_bootstrap.yaml      # Task 3 weak-supervision recipe
-│   └── task3_review_updates.yaml # reproducible direct-review v2 adjudications
+│   └── task3_review_updates.yaml # LLM audit re-adjudication records
 ├── data/
 │   ├── raw/                   # raw assignment corpora
 │   ├── processed/             # cleaned corpus artifacts
@@ -173,12 +173,12 @@ python3 -m src.utils.annotator --sample-size 20
 
 Notes:
 
-- `scripts/run_task3.sh` now trains and evaluates on the directly reviewed label file without regenerating seed labels.
+- `scripts/run_task3.sh` trains and evaluates on the current released label file without regenerating seed labels.
 - The earlier bootstrap recipe remains available in `configs/task3_bootstrap.yaml` as an auxiliary seed-generation artifact, but it is no longer the authoritative Task 3 label source.
-- If you want to regenerate bootstrap seed labels for comparison, use `bash scripts/bootstrap_task3_labels.sh`; it now writes to a separate seed-label file instead of overwriting the reviewed label file.
+- If you want to regenerate bootstrap seed labels for comparison, use `bash scripts/bootstrap_task3_labels.sh`; it now writes to a separate seed-label file instead of overwriting the released label file.
 - The label set is fixed to six classes: `Politics`, `Business/Economy`, `Sports`, `Crime/Law`, `Culture/Entertainment`, and `Other`.
-- The released label file now reflects a direct review pass plus a second adjudication wave over unanimous external-audit disagreements, and the full correction summary is recorded in `outputs/task3_label_review_summary.json`.
-- The reported Task 3 metrics are therefore stronger than the earlier bootstrap-only and direct-review-only releases, but they still do not constitute adjudicated multi-human gold labels.
+- The released labels were produced by a three-stage LLM-assisted pipeline (BM25 seed → GPT-5.4 review → Gemini/Grok cross-provider audit). Documents with unanimous external disagreement were re-adjudicated (13 corrections in `configs/task3_review_updates.yaml`).
+- This approach provides reproducible, auditable labels with cross-model quality checks, but does not constitute adjudicated multi-human gold labels. LLM-generated labels may favor lexically salient topics, potentially inflating bag-of-words classifier accuracy.
 - The split is stratified 70/15/15 with `random_state=42`.
 - The baseline model is `CountVectorizer + MultinomialNB`.
 - The improved model is `TfidfVectorizer(ngram_range=(1, 2), min_df=2, sublinear_tf=True) + LinearSVC`.
@@ -297,7 +297,7 @@ bash scripts/package_submission.sh
 - `sample.txt` is copied into `data/raw/` for debugging parity with the original assignment files.
 - Retrieval judgments are preserved in a canonical qrels file keyed by query-document pairs, so re-running retrieval does not depend on the previous result ordering or model-specific rank positions.
 - Retrieval qrels are also validated automatically against the current top-5 result table, and the validation summary is saved under `outputs/retrieval_results/`.
-- Task 3 labels were directly reviewed after document inspection and then re-adjudicated on unanimous external-audit disagreements, which gives the project a consensus-assisted annotation quality-control story without overstating the result as multi-human gold annotation.
+- Task 3 labels were produced by a three-stage LLM-assisted pipeline (BM25 seed generation, GPT-5.4 primary review, Gemini/Grok cross-provider audit), providing reproducible and auditable annotation with cross-model quality checks rather than single-human manual labeling.
 - The earlier Task 3 bootstrap parameters still live in `configs/task3_bootstrap.yaml`, but that seed-generation recipe is no longer the authoritative label source.
 - The optional Task 3 external-audit workflow stores provider-specific review outputs separately from the released label file so second-pass checks never overwrite the authoritative dataset.
 - `requirements.txt` pins top-level dependencies, while `requirements-lock.txt` and `.python-version` provide a stronger frozen environment snapshot when needed.
