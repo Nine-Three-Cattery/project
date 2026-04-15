@@ -1,8 +1,6 @@
 # COMP 4221 NLP Course Project
 
-中文入口：
-如果你更习惯中文，建议先阅读 [ideas/PLAN_CN.md](/Users/nagato/workspace/project/ideas/PLAN_CN.md) 了解项目背景，再回到本 README 查看英文版的运行说明与交付结构。
-最终可直接提交的成品位于 [submission](/Users/nagato/workspace/project/submission) 和 [submission.zip](/Users/nagato/workspace/project/submission.zip)。
+Chinese version: see [README.zh-CN.md](/Users/nagato/workspace/project/README.zh-CN.md).
 
 This repository implements the full course project workflow for the noisy news corpus assignment:
 
