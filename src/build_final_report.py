@@ -149,26 +149,30 @@ def build_report(
 - Unanimous disagreements against the released labels: `{consensus_count}`
 """
 
-    if task3_metrics["labeling_method"]["kind"] == "single_reviewer_curated_with_external_llm_audit":
+    if task3_metrics["labeling_method"]["kind"] == "llm_assisted_with_external_audit":
         task3_narrative = (
-            "The classification experiment now uses a directly reviewed label file that was then "
-            "re-adjudicated on a subset of externally flagged disagreements. It is therefore "
-            "stronger than the earlier direct-review-only release, though it still falls short of "
-            "adjudicated multi-human gold labels."
+            "The Topic Classification labels were produced by a multi-model LLM-assisted pipeline. "
+            "Initial seed labels were generated via BM25 topic-query matching (`bootstrap_task3_labels.py`). "
+            "These seeds were then reviewed document-by-document using GPT-5.4 (Codex), which read each full article and confirmed or corrected the label. "
+            "Two independent external models (Gemini 2.5 Flash and Grok 4.20) then audited all 200 labels without seeing the current assignments. "
+            "Documents where both external auditors unanimously disagreed with the released label were re-adjudicated. "
+            "This pipeline trades single-human annotator judgment for reproducible, auditable multi-model consensus. "
+            "All audit logs, per-provider review files, and adjudication records are preserved in the repository for full transparency."
         )
-    else:
+    elif task3_metrics["labeling_method"]["kind"] == "llm_assisted":
         task3_narrative = (
-            "The classification experiment now uses a directly reviewed label file instead of the "
-            "earlier bootstrap-only labels. It is therefore more credible as a course-project "
-            "evaluation, though it still reflects a single-reviewer annotation pass rather than "
-            "adjudicated multi-annotator gold labels."
+            "The Topic Classification labels were produced by a multi-model LLM-assisted pipeline. "
+            "Initial seed labels were generated via BM25 topic-query matching. "
+            "These seeds were then reviewed using GPT-5.4 (Codex). "
+            "This approach trades single-human annotator judgment for reproducible, auditable model-driven labeling. "
+            "All intermediate artifacts are preserved in the repository."
         )
 
     return f"""# COMP 4221 NLP Course Project Report
 
 ## Project Scope
 
-This project implements the full noisy-news workflow required by the assignment: light preprocessing for an unlabeled corpus, retrieval with two classical bag-of-words ranking models, and a small supervised topic-classification experiment built on a directly reviewed label set that was later refined through a consensus-assisted external LLM audit workflow.
+This project implements the full noisy-news workflow required by the assignment: light preprocessing for an unlabeled corpus, retrieval with two classical bag-of-words ranking models, and a small supervised topic-classification experiment. The annotation pipeline uses a multi-model LLM-assisted labeling approach with cross-provider auditing rather than single-human annotation.
 
 ## Task 1: Corpus Audit and Preprocessing
 
@@ -197,8 +201,7 @@ The retrieval comparison shows a narrow BM25 advantage overall, but the result i
 ## Task 3: Topic Classification
 
 - Labeled documents: `{task3_metrics["dataset_size"]}`
-- Labeling method: `{task3_metrics["labeling_method"]["kind"]}` from `{task3_metrics["labeling_method"]["source"]}`
-- Review summary path: `{task3_metrics["labeling_method"]["summary_path"]}`
+- Labeling method: `{task3_metrics["labeling_method"]["kind"]}`
 {review_section.rstrip()}
 - Baseline test accuracy / macro-F1: `{task3_metrics["baseline"]["test"]["accuracy"]:.4f}` / `{task3_metrics["baseline"]["test"]["macro_f1"]:.4f}`
 - Improved test accuracy / macro-F1: `{task3_metrics["improved"]["test"]["accuracy"]:.4f}` / `{task3_metrics["improved"]["test"]["macro_f1"]:.4f}`
@@ -216,13 +219,28 @@ The retrieval comparison shows a narrow BM25 advantage overall, but the result i
 
 {task3_narrative}
 
+## Annotation Methodology
+
+The 200 topic labels were created through a three-stage LLM-assisted pipeline:
+
+1. **Seed generation**: BM25 topic-query matching assigned initial high-confidence labels using keyword queries for each of the six topic categories.
+2. **Primary review**: GPT-5.4 (the model driving OpenAI Codex) reviewed each document in full and confirmed or corrected the seed label.
+3. **Cross-provider audit**: Gemini 2.5 Flash (Google) and Grok 4.20 (xAI) independently re-labeled all 200 documents. Documents where both auditors unanimously disagreed with the released label were flagged for re-adjudication.
+
+This approach was chosen over single-human annotation to produce a reproducible, auditable label set with cross-model quality checks. The limitation is that all three annotators are LLMs, so shared systematic biases may exist.
+
+### Accuracy Inflation Caveat
+
+Because the seed labels were generated by BM25 keyword matching and the primary review was performed by an LLM, the resulting labels may favor lexically salient topic signals. Since the downstream classifiers (NB and LinearSVC) also rely on bag-of-words features, there is a risk that the reported accuracy reflects a circular fit between the labeling process and the classification model rather than true topic-classification performance. Scores obtained on human-annotated gold labels would likely be lower.
+
 ## Reproducibility Notes
 
-- The current Task 3 labels were directly reviewed after document inspection and then re-adjudicated on unanimous external-audit disagreements, and the correction summary is stored in `outputs/task3_label_review_summary.json`.
-- The external audit itself is preserved in `outputs/task3_external_reviews/` and summarized in `outputs/task3_llm_audit_summary.json`.
-- The earlier bootstrap recipe remains available in `configs/task3_bootstrap.yaml` as an auxiliary seed-generation artifact, but it is no longer the authoritative label source.
-- Retrieval judgments are stored in a model-independent qrels file keyed by query-document pairs.
-- The repository can be rebuilt with shell scripts rather than notebooks, and all main entry points expose explicit CLI arguments.
+- The bootstrap recipe is in `configs/task3_bootstrap.yaml` and can regenerate the seed labels deterministically.
+- Per-provider audit logs are stored in `outputs/task3_external_reviews/`.
+- The 13 re-adjudicated labels are listed in `configs/task3_review_updates.yaml`.
+- The cross-provider audit summary is in `outputs/task3_llm_audit_summary.json`.
+- Retrieval relevance judgments were also generated by GPT-5.4 and are stored in `data/annotations/retrieval_qrels.csv`.
+- The repository can be rebuilt end-to-end with `bash scripts/run_full_pipeline.sh`.
 
 ## Figures
 
