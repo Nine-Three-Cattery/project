@@ -20,12 +20,12 @@
 ## Query-Level Highlights
 
 - Best BM25 advantage: `Which articles report on basketball, boxing, golf, baseball, or other sports competitions and athlete performance?` with BM25 `P@5=0.80` versus TF-IDF `P@5=0.40`
-- Best TF-IDF advantage: `Which articles cover movies, television, theater, books, or entertainment industry figures?` with TF-IDF `P@5=0.80` versus BM25 `P@5=0.60`
+- Failure case (lowest overall retrieval quality): `Which articles describe charities, social services, food pantries, or community support programs?` with TF-IDF `P@5=0.20` and BM25 `P@5=0.40`
 - Strongest tie: `Which articles focus on elections, government decisions, political parties, or debates over public policy?` at `P@5=1.00`
 
 ## Per-Query Case Studies
 
-### Best BM25 Advantage
+### Success Case
 
 **Query**: Which articles report on basketball, boxing, golf, baseball, or other sports competitions and athlete performance?
 
@@ -48,28 +48,28 @@
 
 **Analysis**: BM25 surfaces 2 document(s) (`3000041`, `3032641`) not in TF-IDF's top-3. The query enumerates multiple sport types, creating a broad set of topical terms. BM25's sublinear tf saturation (controlled by `k1`) prevents a single repeated term like 'sports' from dominating the score, allowing documents that cover diverse sporting contexts (e.g., `3049341`: 'In newspapers and on TV , black families see more success stories in sports than…') to rank highly. Its document length normalization (`b=0.75`) also elevates concise, focused articles over verbose ones. TF-IDF's unbounded term-frequency weighting, by contrast, rewards documents that repeat query terms most often, regardless of whether the repetition is informative. The BM25 score spread across the top-3 (1.2× between rank 1 and rank 3) shows good discrimination between highly relevant and marginally relevant results.
 
-### Best TF-IDF Advantage
+### Failure Case
 
-**Query**: Which articles cover movies, television, theater, books, or entertainment industry figures?
+**Query**: Which articles describe charities, social services, food pantries, or community support programs?
 
 | Model | P@5 |
 | --- | ---: |
-| TF-IDF | 0.80 |
-| BM25 | 0.60 |
-
-**TF-IDF Top-3 Results**:
-
-- Rank 1: `3005041` (score: 0.12) — , " which received strong reviews , was also deemed ineligible because it was mounted in an Off Broadway theater , the same one that housed " Cabaret …
-- Rank 2: `3040841` (score: 0.10) — It 's the illness of longtime economic turn makes tickets too expensive ( $ 65 for top musicals on weekend nights ) for the middle class , which in tu…
-- Rank 3: `3016841` (score: 0.09) — And if I teach a film course , speak at a cinema club , lecture at a museum , or do a guest shot on television , more viewing may come with the job .…
+| TF-IDF | 0.20 |
+| BM25 | 0.40 |
 
 **BM25 Top-3 Results**:
 
-- Rank 1: `3016841` (score: 21.14) — And if I teach a film course , speak at a cinema club , lecture at a museum , or do a guest shot on television , more viewing may come with the job .…
-- Rank 2: `3018541` (score: 19.25) — In deference to differing computer and connection capabilities , both The Fly Thru and - with several screen resolutions for the video imagery , varyi…
-- Rank 3: `4061241` (score: 17.90) — The success of March of the Penguins in 2006 has revitalized the nature documentary field as well , a mainstay of science entertainment , says Jean-Fr…
+- Rank 1: `4132041` (score: 21.04) — Donations of non-perishable or canned food items will be accepted in the lobby and will be donated to local food banks and charities .…
+- Rank 2: `3047541` (score: 19.34) — " A lot of Republicans argued for volunteerism as a substitute for cuts in social services -- which is totally inadequate , " said Pablo Eisenberg , d…
+- Rank 3: `3068041` (score: 17.64) — Clinton 's explanations of her public conduct in Arkansas and Washington were just sort of putting her best foot forward as a social crusader , not as…
 
-**Analysis**: TF-IDF retrieves 2 document(s) (`3005041`, `3040841`) not in BM25's top-3. The query targets specific entertainment domains ('movies, television, theater, books'), and TF-IDF's cosine similarity rewards documents where multiple query terms co-occur in concentrated passages — the top result `3005041` (', " which received strong reviews , was also deemed ineligible because it was mo…') matches on several entertainment terms simultaneously. BM25's saturation function dampens the score contribution of repeated domain terms: the second occurrence of 'theater' or 'film' adds less incremental score than in TF-IDF, causing BM25 to promote tangential documents like `4061241` (score 17.9) into the top-5 at the expense of better lexical matches.
+**TF-IDF Top-3 Results**:
+
+- Rank 1: `3051741` (score: 0.08) — " Social Security by the numbers 36 Number of campaign stops made by President Bush to push his Social Security proposals ( since the 2004 election ) …
+- Rank 2: `5015741` (score: 0.06) — The 10 nominees come from diverse backgrounds , and include representatives from public health , parenting and education groups , child welfare expert…
+- Rank 3: `3009741` (score: 0.05) — " The oil-for-food deal is based on UN Security Council Resolution 986 , which allows Iraq to sell $ 2 billion worth of oil every six months .…
+
+**Analysis**: This query is selected as the failure case because both systems stay at low precision (TF-IDF `P@5=0.20`, BM25 `P@5=0.40`). Even when BM25 slightly leads, neither model reaches acceptable retrieval quality. The top-3 overlap (none) suggests both rankers are driven toward different partially relevant documents, indicating a shared coverage gap rather than a ranking-only issue.
 
 
 ## Interpretation

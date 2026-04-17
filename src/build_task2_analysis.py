@@ -58,6 +58,24 @@ def select_case(per_query: pd.DataFrame, metric_column: str) -> pd.Series:
     return per_query.loc[best_index]
 
 
+def select_failure_case(per_query: pd.DataFrame) -> pd.Series:
+    """Return the weakest query where both retrieval models perform poorly."""
+
+    if per_query.empty:
+        raise ValueError("Per-query retrieval score table is empty.")
+
+    scored = per_query.assign(
+        best_model_score=per_query[["bm25", "tfidf"]].max(axis=1),
+        combined_score=per_query["bm25"] + per_query["tfidf"],
+        score_gap=(per_query["bm25"] - per_query["tfidf"]).abs(),
+    )
+    worst_index = scored.sort_values(
+        ["best_model_score", "combined_score", "score_gap"],
+        ascending=[True, True, True],
+    ).index[0]
+    return per_query.loc[worst_index]
+
+
 def load_per_query_json(per_query_dir: Path, query_text: str) -> dict | None:
     """Load the per-query JSON file matching the given query text."""
 
@@ -71,18 +89,17 @@ def load_per_query_json(per_query_dir: Path, query_text: str) -> dict | None:
 
 
 def build_case_study(
-    per_query: pd.DataFrame,
     per_query_dir: Path,
-    bm25_case: pd.Series,
-    tfidf_case: pd.Series,
+    success_case: pd.Series,
+    failure_case: pd.Series,
 ) -> str:
-    """Build detailed case studies for the best BM25 and best TF-IDF advantage queries."""
+    """Build one success case and one failure case for retrieval error analysis."""
 
     sections = []
 
     for label, case, winner_model, loser_model in [
-        ("Best BM25 Advantage", bm25_case, "bm25", "tfidf"),
-        ("Best TF-IDF Advantage", tfidf_case, "tfidf", "bm25"),
+        ("Success Case", success_case, "bm25", "tfidf"),
+        ("Failure Case", failure_case, None, None),
     ]:
         query_text = case["Query"]
         data = load_per_query_json(per_query_dir, query_text)
@@ -93,17 +110,17 @@ def build_case_study(
         section += f"| TF-IDF | {case['tfidf']:.2f} |\n"
         section += f"| BM25 | {case['bm25']:.2f} |\n\n"
 
-        winner_results: list[dict] = []
-        loser_results: list[dict] = []
+        bm25_results: list[dict] = []
+        tfidf_results: list[dict] = []
 
         if data and "results" in data:
-            for model_name in [winner_model, loser_model]:
+            for model_name in ["bm25", "tfidf"]:
                 model_label = "BM25" if model_name == "bm25" else "TF-IDF"
                 results = data["results"].get(model_name, [])[:3]
-                if model_name == winner_model:
-                    winner_results = results
+                if model_name == "bm25":
+                    bm25_results = results
                 else:
-                    loser_results = results
+                    tfidf_results = results
                 if results:
                     section += f"**{model_label} Top-3 Results**:\n\n"
                     for r in results:
@@ -111,16 +128,22 @@ def build_case_study(
                         section += f"- Rank {r['rank']}: `{r['doc_id']}` (score: {float(r['score']):.2f}) — {snippet}…\n"
                     section += "\n"
 
-            winner_label = "BM25" if winner_model == "bm25" else "TF-IDF"
-            loser_label = "TF-IDF" if winner_model == "bm25" else "BM25"
-            winner_ids = {r["doc_id"] for r in winner_results}
-            loser_ids = {r["doc_id"] for r in loser_results}
-            only_winner = winner_ids - loser_ids
+            bm25_ids = {r["doc_id"] for r in bm25_results}
+            tfidf_ids = {r["doc_id"] for r in tfidf_results}
+            only_bm25 = bm25_ids - tfidf_ids
 
-            section += _build_content_analysis(
-                winner_model, winner_label, loser_label,
-                winner_results, loser_results, only_winner, query_text,
-            )
+            if label == "Success Case":
+                section += _build_content_analysis(
+                    "bm25",
+                    "BM25",
+                    "TF-IDF",
+                    bm25_results,
+                    tfidf_results,
+                    only_bm25,
+                    query_text,
+                )
+            else:
+                section += _build_failure_analysis(case, bm25_results, tfidf_results)
 
         sections.append(section)
 
@@ -176,15 +199,35 @@ def _build_content_analysis(
         )
 
 
+def _build_failure_analysis(
+    case: pd.Series,
+    bm25_results: list[dict],
+    tfidf_results: list[dict],
+) -> str:
+    """Explain why a query is treated as a retrieval failure case."""
+
+    if not bm25_results and not tfidf_results:
+        return "**Analysis**: Both models fail to retrieve meaningful results for this query.\n"
+
+    overlap = {r["doc_id"] for r in bm25_results} & {r["doc_id"] for r in tfidf_results}
+    overlap_text = ", ".join(f"`{doc_id}`" for doc_id in sorted(overlap)) if overlap else "none"
+    return (
+        f"**Analysis**: This query is selected as the failure case because both systems stay at "
+        f"low precision (TF-IDF `P@5={case['tfidf']:.2f}`, BM25 `P@5={case['bm25']:.2f}`). "
+        f"Even when BM25 slightly leads, neither model reaches acceptable retrieval quality. "
+        f"The top-3 overlap ({overlap_text}) suggests both rankers are driven toward different "
+        f"partially relevant documents, indicating a shared coverage gap rather than a ranking-only issue.\n"
+    )
+
+
 def build_report(summary_row: pd.Series, per_query: pd.DataFrame, per_query_dir: Path) -> str:
     """Render a markdown retrieval analysis from current evaluation artifacts."""
 
     per_query = per_query.copy()
     per_query["bm25_margin"] = per_query["bm25"] - per_query["tfidf"]
-    per_query["tfidf_margin"] = per_query["tfidf"] - per_query["bm25"]
 
     bm25_case = select_case(per_query, "bm25_margin")
-    tfidf_case = select_case(per_query, "tfidf_margin")
+    failure_case = select_failure_case(per_query)
     strongest_tie = per_query.loc[(per_query["winner"] == "tie"), ["Query", "bm25"]]
     tie_line = (
         f"- Strongest tie: `{strongest_tie.sort_values('bm25', ascending=False).iloc[0]['Query']}` "
@@ -193,7 +236,7 @@ def build_report(summary_row: pd.Series, per_query: pd.DataFrame, per_query_dir:
         else "- No ties were observed."
     )
 
-    case_study = build_case_study(per_query, per_query_dir, bm25_case, tfidf_case)
+    case_study = build_case_study(per_query_dir, bm25_case, failure_case)
 
     return f"""# Task 2 Retrieval Analysis
 
@@ -217,7 +260,7 @@ def build_report(summary_row: pd.Series, per_query: pd.DataFrame, per_query_dir:
 ## Query-Level Highlights
 
 - Best BM25 advantage: `{bm25_case["Query"]}` with BM25 `P@5={bm25_case["bm25"]:.2f}` versus TF-IDF `P@5={bm25_case["tfidf"]:.2f}`
-- Best TF-IDF advantage: `{tfidf_case["Query"]}` with TF-IDF `P@5={tfidf_case["tfidf"]:.2f}` versus BM25 `P@5={tfidf_case["bm25"]:.2f}`
+- Failure case (lowest overall retrieval quality): `{failure_case["Query"]}` with TF-IDF `P@5={failure_case["tfidf"]:.2f}` and BM25 `P@5={failure_case["bm25"]:.2f}`
 {tie_line}
 
 ## Per-Query Case Studies

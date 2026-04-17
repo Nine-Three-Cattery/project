@@ -325,4 +325,4 @@ bash scripts/package_submission.sh
 - 所有 shell 脚本通过 `scripts/detect_python.sh` 自动检测 Python ≥ 3.10 解释器（依次检查 venv、Homebrew、系统 Python）。如需指定，可设环境变量 `PYTHON=/path/to/python3`。
 - `scripts/prepare_submission.sh` 会在重建产物后生成干净的 `submission/` 目录。
 - 整个项目尽量保持脚本化和可复现，不依赖 notebook。
-- Task 2 分析包含 **逐查询案例研究**：展示 BM25 和 TF-IDF 各自优势最大的查询的 top-3 检索结果，并附带基于实际文档内容的模型优劣分析。
+- Task 2 分析包含 **逐查询案例研究**：提供 1 个成功案例和 1 个失败案例，展示两种模型的 top-3 检索结果，并附带基于实际文档内容的误差分析。
