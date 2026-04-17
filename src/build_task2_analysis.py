@@ -81,8 +81,8 @@ def build_case_study(
     sections = []
 
     for label, case, winner_model, loser_model in [
-        ("Best BM25 Advantage", bm25_case, "bm25", "tfidf"),
-        ("Best TF-IDF Advantage", tfidf_case, "tfidf", "bm25"),
+        ("Success Case: BM25 improves over TF-IDF", bm25_case, "bm25", "tfidf"),
+        ("Failure Case: BM25 underperforms TF-IDF", tfidf_case, "tfidf", "bm25"),
     ]:
         query_text = case["Query"]
         data = load_per_query_json(per_query_dir, query_text)
@@ -220,7 +220,7 @@ def build_report(summary_row: pd.Series, per_query: pd.DataFrame, per_query_dir:
 - Best TF-IDF advantage: `{tfidf_case["Query"]}` with TF-IDF `P@5={tfidf_case["tfidf"]:.2f}` versus BM25 `P@5={tfidf_case["bm25"]:.2f}`
 {tie_line}
 
-## Per-Query Case Studies
+## Success and Failure Case Studies
 
 {case_study}
 
