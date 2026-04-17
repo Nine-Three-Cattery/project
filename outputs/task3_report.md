@@ -61,10 +61,19 @@ From 0% to 30% label noise, macro-F1 drops by 0.080 (from 0.933 to 0.853). This 
 
 ## Frequent Error Types
 
-### Crime/Law -> Other (1 cases)
+The improved model produced only two held-out error types, so the third type below is drawn from the baseline test-set errors and marked by source.
+
+### Crime/Law -> Other (1 cases, improved test set)
   - `5022441` | gold=`Crime/Law` | predicted=`Other` | Posted ! A link has been posted to your Facebook feed . Buy Photo Natasha Radosavac , Steve 's sister , center , lights candles for others at a vigil for the Radosavac family near their home that burned in Eastpointe . P...
-### Politics -> Crime/Law (1 cases)
+**Explanation**: Crime stories centered on victims, vigils, or community aftermath can lack explicit court and policing vocabulary, so a bag-of-words model may fall back to the broad Other category.
+
+### Politics -> Crime/Law (1 cases, improved test set)
   - `4114241` | gold=`Politics` | predicted=`Crime/Law` | In the final , frenetic days of Georgia 's 2010 GOP runoff , a bombshell dropped : word that a federal grand jury in Atlanta demanded information seemingly related to Nathan Deal 's actions as a member of Congress . # Th...
+**Explanation**: Political corruption and ethics stories often mention investigations, charges, and grand juries, creating lexical overlap with criminal justice reporting.
+
+### Other -> Culture/Entertainment (1 cases, baseline test set)
+  - `5025441` | gold=`Other` | predicted=`Culture/Entertainment` | Plant of the Week : Garden Mum Clara Curtis , Clara Curtis Mum Sunday A long-standing fall garden favorite is the chrysanthemum , and a genuine beauty is the Clara Curtis variety ( Chrysanthemum ' Clara Curtis ' ) . This...
+**Explanation**: The catch-all Other label can include lifestyle or human-interest stories with media, celebrity, or arts vocabulary, making them look like Culture/Entertainment examples.
 
 ## Systematic Error Pattern Analysis
 

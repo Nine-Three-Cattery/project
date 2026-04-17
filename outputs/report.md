@@ -65,10 +65,12 @@ The retrieval comparison shows a narrow BM25 advantage overall, but the result i
 - Cross-provider agreement rate: `0.905`
 - Unanimous disagreements against the released labels: `0`
 
-### Main Error Pattern
+### Main Error Patterns
 
-- Crime/Law -> Other (1 cases): `5022441`
-- Politics -> Crime/Law (1 cases): `4114241`
+The improved model produced only two held-out error types, so the third type is drawn from baseline test-set errors and explicitly marked by source.
+- Crime/Law -> Other (1 cases, improved test set): `5022441`
+- Politics -> Crime/Law (1 cases, improved test set): `4114241`
+- Other -> Culture/Entertainment (1 cases, baseline test set): `5025441`
 
 The Topic Classification labels were produced by a multi-model LLM-assisted pipeline. Initial seed labels were generated via BM25 topic-query matching (`bootstrap_task3_labels.py`). These seeds were then reviewed document-by-document using GPT-5.4 (Codex), which read each full article and confirmed or corrected the label. Two independent external models (Gemini 2.5 Flash and Grok 4.20) then audited all 200 labels without seeing the current assignments. Documents where both external auditors unanimously disagreed with the released label were re-adjudicated. This pipeline trades single-human annotator judgment for reproducible, auditable multi-model consensus. All audit logs, per-provider review files, and adjudication records are preserved in the repository for full transparency.
 

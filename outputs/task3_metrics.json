@@ -74,6 +74,20 @@
         }
       ],
       "source": "improved test set"
+    },
+    {
+      "gold_label": "Other",
+      "predicted_label": "Culture/Entertainment",
+      "count": 1,
+      "examples": [
+        {
+          "doc_id": "5025441",
+          "gold_label": "Other",
+          "predicted_label": "Culture/Entertainment",
+          "snippet": "Plant of the Week : Garden Mum Clara Curtis , Clara Curtis Mum Sunday A long-standing fall garden favorite is the chrysanthemum , and a genuine beauty is the Clara Curtis variety ( Chrysanthemum ' Clara Curtis ' ) . This..."
+        }
+      ],
+      "source": "baseline test set"
     }
   ],
   "error_patterns": [
