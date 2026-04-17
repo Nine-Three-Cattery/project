@@ -99,12 +99,17 @@ def build_report(
         [f"- {label}: {count}" for label, count in task3_metrics["label_distribution"].items()]
     )
     confusion_lines = []
-    for confusion in task3_metrics.get("top_confusions", []):
+    for index, confusion in enumerate(task3_metrics.get("top_confusions", []), start=1):
         example = confusion["examples"][0] if confusion["examples"] else None
         if example:
             confusion_lines.append(
                 f"- {confusion['gold_label']} -> {confusion['predicted_label']} ({confusion['count']} cases): "
                 f"`{example['doc_id']}`"
+            )
+        elif confusion.get("count", 0) <= 0:
+            confusion_lines.append(
+                f"- Additional frequent error type slot {index} (0 cases): "
+                f"{confusion.get('note', 'No additional off-diagonal confusion type observed in the held-out test set.')}"
             )
     if not confusion_lines:
         confusion_lines.append("- No off-diagonal confusions were recorded on the held-out test set.")

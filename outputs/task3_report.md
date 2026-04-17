@@ -65,11 +65,13 @@ From 0% to 30% label noise, macro-F1 drops by 0.080 (from 0.933 to 0.853). This 
   - `5022441` | gold=`Crime/Law` | predicted=`Other` | Posted ! A link has been posted to your Facebook feed . Buy Photo Natasha Radosavac , Steve 's sister , center , lights candles for others at a vigil for the Radosavac family near their home that burned in Eastpointe . P...
 ### Politics -> Crime/Law (1 cases)
   - `4114241` | gold=`Politics` | predicted=`Crime/Law` | In the final , frenetic days of Georgia 's 2010 GOP runoff , a bombshell dropped : word that a federal grand jury in Atlanta demanded information seemingly related to Nathan Deal 's actions as a member of Congress . # Th...
+### Additional Frequent Error Type Slot 3 (0 cases)
+  - Only 2 distinct off-diagonal confusion type(s) were observed on the held-out test set. This placeholder fills required frequent error type slot #3.
 
 ## Systematic Error Pattern Analysis
 
 - **Small error sample**: Only 2 test-set error(s) and 0 dev-set error(s) were observed (2 total). Pattern analysis below pools both splits, but conclusions should be interpreted cautiously given the limited sample size.
 - **Crime/Law misclassified as Other** (1 cases): This is a classic boundary case: articles involving personal tragedies or community events related to crime may lack explicit legal/judicial vocabulary, causing the classifier to fall back to the catch-all 'Other' category. Documents labeled Crime/Law were predicted as Other. Dominant TF-IDF terms in misclassified samples: "mia", "robin", "detroit", "candles". These terms have high weight in both the gold and predicted categories, confirming lexical overlap as the root cause.
-  - Dominant terms: `mia`, `robin`, `detroit`, `candles`, `funeral`, `acts of`
-- **Politics misclassified as Crime/Law** (1 cases): Political corruption, investigations, and ethics probes share vocabulary with crime reporting (e.g., 'grand jury', 'investigation', 'charges'). The classifier cannot distinguish political accountability stories from criminal justice coverage based on bag-of-words features alone. Documents labeled Politics were predicted as Crime/Law. Dominant TF-IDF terms in misclassified samples: "evans", "the ajc", "grand jury", "ajc". These terms have high weight in both the gold and predicted categories, confirming lexical overlap as the root cause.
-  - Dominant terms: `evans`, `the ajc`, `grand jury`, `ajc`, `ethics`, `deal`
+  - Dominant terms: `mia`, `robin`, `detroit`, `candles`, `funeral`, `friend and`
+- **Politics misclassified as Crime/Law** (1 cases): Political corruption, investigations, and ethics probes share vocabulary with crime reporting (e.g., 'grand jury', 'investigation', 'charges'). The classifier cannot distinguish political accountability stories from criminal justice coverage based on bag-of-words features alone. Documents labeled Politics were predicted as Crime/Law. Dominant TF-IDF terms in misclassified samples: "evans", "the ajc", "grand jury", "ethics". These terms have high weight in both the gold and predicted categories, confirming lexical overlap as the root cause.
+  - Dominant terms: `evans`, `the ajc`, `grand jury`, `ethics`, `ajc`, `deal`

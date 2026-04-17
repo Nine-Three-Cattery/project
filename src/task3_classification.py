@@ -264,9 +264,25 @@ def collect_confusions(
 
 
 def select_top_confusions(confusions: list[dict], limit: int = 3) -> list[dict]:
-    """Select up to three confusion pairs from the improved model only."""
+    """Select up to three confusion pairs and pad with explicit placeholders if needed."""
 
-    return confusions[:limit]
+    selected = list(confusions[:limit])
+    observed = len(selected)
+    for slot in range(observed + 1, limit + 1):
+        selected.append(
+            {
+                "gold_label": "N/A",
+                "predicted_label": "N/A",
+                "count": 0,
+                "examples": [],
+                "source": "improved test set",
+                "note": (
+                    f"Only {observed} distinct off-diagonal confusion type(s) were observed on the held-out test set. "
+                    f"This placeholder fills required frequent error type slot #{slot}."
+                ),
+            }
+        )
+    return selected
 
 
 def analyze_error_patterns(
@@ -587,7 +603,18 @@ def build_report(
         ]
 
     confusion_sections = []
-    for confusion in confusions:
+    for index, confusion in enumerate(confusions, start=1):
+        if confusion.get("count", 0) <= 0:
+            confusion_sections.append(
+                "\n".join(
+                    [
+                        f"### Additional Frequent Error Type Slot {index} (0 cases)",
+                        f"  - {confusion.get('note', 'No additional off-diagonal confusion type observed in the evaluation split.')}",
+                    ]
+                )
+            )
+            continue
+
         examples = "\n".join(
             [
                 f"  - `{example['doc_id']}` | gold=`{example['gold_label']}` | predicted=`{example['predicted_label']}` | {example['snippet']}"
@@ -598,7 +625,7 @@ def build_report(
             "\n".join(
                 [
                     f"### {confusion['gold_label']} -> {confusion['predicted_label']} ({confusion['count']} cases)",
-                    examples,
+                    examples if examples else "  - No representative example available.",
                 ]
             )
         )

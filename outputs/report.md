@@ -52,8 +52,8 @@ The retrieval comparison shows a narrow BM25 advantage overall, but the result i
 
 - Politics: 43
 - Culture/Entertainment: 37
-- Sports: 32
 - Business/Economy: 32
+- Sports: 32
 - Crime/Law: 31
 - Other: 25
 
@@ -69,6 +69,7 @@ The retrieval comparison shows a narrow BM25 advantage overall, but the result i
 
 - Crime/Law -> Other (1 cases): `5022441`
 - Politics -> Crime/Law (1 cases): `4114241`
+- Additional frequent error type slot 3 (0 cases): Only 2 distinct off-diagonal confusion type(s) were observed on the held-out test set. This placeholder fills required frequent error type slot #3.
 
 The Topic Classification labels were produced by a multi-model LLM-assisted pipeline. Initial seed labels were generated via BM25 topic-query matching (`bootstrap_task3_labels.py`). These seeds were then reviewed document-by-document using GPT-5.4 (Codex), which read each full article and confirmed or corrected the label. Two independent external models (Gemini 2.5 Flash and Grok 4.20) then audited all 200 labels without seeing the current assignments. Documents where both external auditors unanimously disagreed with the released label were re-adjudicated. This pipeline trades single-human annotator judgment for reproducible, auditable multi-model consensus. All audit logs, per-provider review files, and adjudication records are preserved in the repository for full transparency.
 

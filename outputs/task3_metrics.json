@@ -33,8 +33,8 @@
   "label_distribution": {
     "Politics": 43,
     "Culture/Entertainment": 37,
-    "Sports": 32,
     "Business/Economy": 32,
+    "Sports": 32,
     "Crime/Law": 31,
     "Other": 25
   },
@@ -74,6 +74,14 @@
         }
       ],
       "source": "improved test set"
+    },
+    {
+      "gold_label": "N/A",
+      "predicted_label": "N/A",
+      "count": 0,
+      "examples": [],
+      "source": "improved test set",
+      "note": "Only 2 distinct off-diagonal confusion type(s) were observed on the held-out test set. This placeholder fills required frequent error type slot #3."
     }
   ],
   "error_patterns": [
@@ -90,7 +98,7 @@
         "detroit",
         "candles",
         "funeral",
-        "acts of"
+        "friend and"
       ],
       "description": "This is a classic boundary case: articles involving personal tragedies or community events related to crime may lack explicit legal/judicial vocabulary, causing the classifier to fall back to the catch-all 'Other' category. Documents labeled Crime/Law were predicted as Other. Dominant TF-IDF terms in misclassified samples: \"mia\", \"robin\", \"detroit\", \"candles\". These terms have high weight in both the gold and predicted categories, confirming lexical overlap as the root cause."
     },
@@ -101,11 +109,11 @@
         "evans",
         "the ajc",
         "grand jury",
-        "ajc",
         "ethics",
+        "ajc",
         "deal"
       ],
-      "description": "Political corruption, investigations, and ethics probes share vocabulary with crime reporting (e.g., 'grand jury', 'investigation', 'charges'). The classifier cannot distinguish political accountability stories from criminal justice coverage based on bag-of-words features alone. Documents labeled Politics were predicted as Crime/Law. Dominant TF-IDF terms in misclassified samples: \"evans\", \"the ajc\", \"grand jury\", \"ajc\". These terms have high weight in both the gold and predicted categories, confirming lexical overlap as the root cause."
+      "description": "Political corruption, investigations, and ethics probes share vocabulary with crime reporting (e.g., 'grand jury', 'investigation', 'charges'). The classifier cannot distinguish political accountability stories from criminal justice coverage based on bag-of-words features alone. Documents labeled Politics were predicted as Crime/Law. Dominant TF-IDF terms in misclassified samples: \"evans\", \"the ajc\", \"grand jury\", \"ethics\". These terms have high weight in both the gold and predicted categories, confirming lexical overlap as the root cause."
     }
   ],
   "per_class_f1": {
