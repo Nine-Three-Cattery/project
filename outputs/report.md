@@ -27,6 +27,11 @@ The corpus parser splits documents with the leading `@@<numeric_id>` marker. Cle
 
 The retrieval comparison shows a narrow BM25 advantage overall, but the result is query-dependent rather than absolute. BM25 performs better on compact, topic-heavy queries, while TF-IDF remains stronger when exact lexical overlap dominates the information need.
 
+### Task 2 Error Analysis
+
+- Success case: BM25 improves on the sports query (`0.80` vs `0.40`) because length normalization and term-frequency saturation help rank concise, topically diverse sports articles above documents that repeat only a few query terms.
+- Failure case: BM25 underperforms on the entertainment query (`0.60` vs `0.80`) because saturation dampens repeated domain terms such as movie, television, theater, and books, allowing tangential entertainment documents to outrank stronger exact lexical matches.
+
 ## Task 2 Qrels Validation
 
 - Validation passed: `True`

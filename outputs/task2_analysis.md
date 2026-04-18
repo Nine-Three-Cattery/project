@@ -23,9 +23,9 @@
 - Best TF-IDF advantage: `Which articles cover movies, television, theater, books, or entertainment industry figures?` with TF-IDF `P@5=0.80` versus BM25 `P@5=0.60`
 - Strongest tie: `Which articles focus on elections, government decisions, political parties, or debates over public policy?` at `P@5=1.00`
 
-## Per-Query Case Studies
+## Success and Failure Case Studies
 
-### Best BM25 Advantage
+### Success Case: BM25 improves over TF-IDF
 
 **Query**: Which articles report on basketball, boxing, golf, baseball, or other sports competitions and athlete performance?
 
@@ -48,7 +48,7 @@
 
 **Analysis**: BM25 surfaces 2 document(s) (`3000041`, `3032641`) not in TF-IDF's top-3. The query enumerates multiple sport types, creating a broad set of topical terms. BM25's sublinear tf saturation (controlled by `k1`) prevents a single repeated term like 'sports' from dominating the score, allowing documents that cover diverse sporting contexts (e.g., `3049341`: 'In newspapers and on TV , black families see more success stories in sports than…') to rank highly. Its document length normalization (`b=0.75`) also elevates concise, focused articles over verbose ones. TF-IDF's unbounded term-frequency weighting, by contrast, rewards documents that repeat query terms most often, regardless of whether the repetition is informative. The BM25 score spread across the top-3 (1.2× between rank 1 and rank 3) shows good discrimination between highly relevant and marginally relevant results.
 
-### Best TF-IDF Advantage
+### Failure Case: BM25 underperforms TF-IDF
 
 **Query**: Which articles cover movies, television, theater, books, or entertainment industry figures?
 

@@ -203,6 +203,11 @@ The corpus parser splits documents with the leading `@@<numeric_id>` marker. Cle
 - Best TF-IDF advantage: `{best_tfidf["Query"]}` (`{best_tfidf["tfidf"]:.2f}` vs `{best_tfidf["bm25"]:.2f}`)
 
 The retrieval comparison shows a narrow BM25 advantage overall, but the result is query-dependent rather than absolute. BM25 performs better on compact, topic-heavy queries, while TF-IDF remains stronger when exact lexical overlap dominates the information need.
+
+### Task 2 Error Analysis
+
+- Success case: BM25 improves on the sports query (`{best_bm25["bm25"]:.2f}` vs `{best_bm25["tfidf"]:.2f}`) because length normalization and term-frequency saturation help rank concise, topically diverse sports articles above documents that repeat only a few query terms.
+- Failure case: BM25 underperforms on the entertainment query (`{best_tfidf["bm25"]:.2f}` vs `{best_tfidf["tfidf"]:.2f}`) because saturation dampens repeated domain terms such as movie, television, theater, and books, allowing tangential entertainment documents to outrank stronger exact lexical matches.
 {qrels_section}
 
 ## Task 3: Topic Classification
