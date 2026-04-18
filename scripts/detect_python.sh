@@ -14,10 +14,16 @@ _check_python_version() {
   "$py" -c "import sys; sys.exit(0 if sys.version_info >= (3, 10) else 1)" 2>/dev/null
 }
 
-# Priority: venv > VIRTUAL_ENV > homebrew > system
+# Priority: project venv > active venv > Homebrew > system
 for candidate in \
   "${PROJECT_ROOT:-.}/.venv/bin/python3" \
+  "${PROJECT_ROOT:-.}/.venv/bin/python" \
+  "${PROJECT_ROOT:-.}/.venv/Scripts/python.exe" \
+  "${PROJECT_ROOT:-.}/.venv/Scripts/python" \
   "${VIRTUAL_ENV:-__none__}/bin/python3" \
+  "${VIRTUAL_ENV:-__none__}/bin/python" \
+  "${VIRTUAL_ENV:-__none__}/Scripts/python.exe" \
+  "${VIRTUAL_ENV:-__none__}/Scripts/python" \
   /opt/homebrew/bin/python3.14 \
   /opt/homebrew/bin/python3.13 \
   /opt/homebrew/bin/python3.12 \

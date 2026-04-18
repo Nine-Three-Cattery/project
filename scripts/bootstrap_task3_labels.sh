@@ -5,4 +5,4 @@ PROJECT_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$PROJECT_ROOT"
 source scripts/detect_python.sh
 
-$PYTHON -m src.bootstrap_task3_labels "$@"
+"$PYTHON" -m src.bootstrap_task3_labels "$@"

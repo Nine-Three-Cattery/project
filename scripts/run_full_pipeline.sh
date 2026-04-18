@@ -8,4 +8,4 @@ source scripts/detect_python.sh
 bash scripts/run_task1.sh
 bash scripts/run_retrieval.sh
 bash scripts/run_task3.sh
-$PYTHON -m src.build_final_report
+"$PYTHON" -m src.build_final_report
