@@ -263,10 +263,70 @@ def collect_confusions(
     return summary
 
 
-def select_top_confusions(confusions: list[dict], limit: int = 3) -> list[dict]:
-    """Select up to three confusion pairs from the improved model only."""
+def select_top_confusions(
+    confusions: list[dict],
+    limit: int = 3,
+    fallback_confusions: list[dict] | None = None,
+) -> list[dict]:
+    """Select up to three confusion pairs, using fallback model errors if needed."""
 
-    return confusions[:limit]
+    selected = confusions[:limit]
+    seen_pairs = {(item["gold_label"], item["predicted_label"]) for item in selected}
+
+    if fallback_confusions is None or len(selected) >= limit:
+        return selected
+
+    for confusion in fallback_confusions:
+        pair = (confusion["gold_label"], confusion["predicted_label"])
+        if pair in seen_pairs:
+            continue
+        selected.append(confusion)
+        seen_pairs.add(pair)
+        if len(selected) >= limit:
+            break
+
+    return selected
+
+
+def describe_error_type(gold: str, predicted: str) -> str:
+    """Return a concise explanation for a gold/predicted error type."""
+
+    pair_key = (gold, predicted)
+    if pair_key == ("Crime/Law", "Other"):
+        return (
+            "Crime stories centered on victims, vigils, or community aftermath can lack explicit "
+            "court and policing vocabulary, so a bag-of-words model may fall back to the broad "
+            "Other category."
+        )
+    if pair_key == ("Politics", "Crime/Law"):
+        return (
+            "Political corruption and ethics stories often mention investigations, charges, and "
+            "grand juries, creating lexical overlap with criminal justice reporting."
+        )
+    if pair_key == ("Other", "Culture/Entertainment"):
+        return (
+            "The catch-all Other label can include lifestyle or human-interest stories with media, "
+            "celebrity, or arts vocabulary, making them look like Culture/Entertainment examples."
+        )
+    if pair_key in [("Crime/Law", "Politics"), ("Politics", "Crime/Law")]:
+        return (
+            "Legal proceedings involving public officials or government decisions sit near the "
+            "boundary between political accountability and criminal justice coverage."
+        )
+    if pair_key in [("Other", "Crime/Law"), ("Crime/Law", "Other")]:
+        return (
+            "Incident-driven local stories may contain public-safety vocabulary without enough "
+            "explicit legal framing to separate Crime/Law from Other."
+        )
+    if pair_key in [("Business/Economy", "Politics"), ("Politics", "Business/Economy")]:
+        return (
+            "Government economic policy, trade negotiations, and regulatory stories span both "
+            "political and business vocabulary."
+        )
+    return (
+        f"Documents labeled {gold} share enough surface vocabulary with {predicted} that a "
+        "bag-of-words classifier can over-weight lexical overlap instead of the broader article topic."
+    )
 
 
 def analyze_error_patterns(
@@ -586,6 +646,14 @@ def build_report(
             "- The reported scores should be interpreted with that mixed provenance in mind.",
         ]
 
+    uses_fallback_confusions = any("baseline" in str(confusion.get("source", "")) for confusion in confusions)
+    confusion_intro = (
+        "The improved model produced only two held-out error types, so the third type below is "
+        "drawn from the baseline test-set errors and marked by source."
+        if uses_fallback_confusions
+        else ""
+    )
+
     confusion_sections = []
     for confusion in confusions:
         examples = "\n".join(
@@ -594,11 +662,14 @@ def build_report(
                 for example in confusion["examples"]
             ]
         )
+        source = confusion.get("source", "test set")
+        explanation = describe_error_type(confusion["gold_label"], confusion["predicted_label"])
         confusion_sections.append(
             "\n".join(
                 [
-                    f"### {confusion['gold_label']} -> {confusion['predicted_label']} ({confusion['count']} cases)",
+                    f"### {confusion['gold_label']} -> {confusion['predicted_label']} ({confusion['count']} cases, {source})",
                     examples,
+                    f"**Explanation**: {explanation}",
                 ]
             )
         )
@@ -613,6 +684,11 @@ def build_report(
             + f": {pattern['description']}"
             + (f"\n  - Dominant terms: {keywords_str}" if keywords_str else "")
         )
+    confusion_block = (
+        "\n\n".join(confusion_sections)
+        if confusion_sections
+        else "The improved model produced no off-diagonal confusions on the held-out test set."
+    )
 
     # Build noise robustness section
     noise_section = ""
@@ -670,7 +746,9 @@ From 0% to {max(float(k.strip('%'))/100 for k in noise_results):.0%} label noise
 {noise_section}
 ## Frequent Error Types
 
-{chr(10).join(confusion_sections) if confusion_sections else "The improved model produced no off-diagonal confusions on the held-out test set."}
+{confusion_intro}
+
+{confusion_block}
 
 ## Systematic Error Pattern Analysis
 
@@ -738,7 +816,16 @@ def main() -> None:
         improved_test_metrics["predictions"],
         source="improved test set",
     )
-    confusions = select_top_confusions(improved_confusions)
+    baseline_confusions = collect_confusions(
+        test_frame,
+        test_frame["label"].tolist(),
+        baseline_test_metrics["predictions"],
+        source="baseline test set",
+    )
+    confusions = select_top_confusions(
+        improved_confusions,
+        fallback_confusions=baseline_confusions,
+    )
 
     # Run noise robustness test
     noise_results = run_noise_robustness_test(

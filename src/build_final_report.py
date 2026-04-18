@@ -102,12 +102,19 @@ def build_report(
     for confusion in task3_metrics.get("top_confusions", []):
         example = confusion["examples"][0] if confusion["examples"] else None
         if example:
+            source = confusion.get("source", "test set")
             confusion_lines.append(
-                f"- {confusion['gold_label']} -> {confusion['predicted_label']} ({confusion['count']} cases): "
+                f"- {confusion['gold_label']} -> {confusion['predicted_label']} ({confusion['count']} cases, {source}): "
                 f"`{example['doc_id']}`"
             )
     if not confusion_lines:
         confusion_lines.append("- No off-diagonal confusions were recorded on the held-out test set.")
+    confusion_note = (
+        "The improved model produced only two held-out error types, so the third type is drawn from "
+        "baseline test-set errors and explicitly marked by source."
+        if any("baseline" in str(confusion.get("source", "")) for confusion in task3_metrics.get("top_confusions", []))
+        else ""
+    )
 
     qrels_section = ""
     if qrels_validation is not None:
@@ -213,8 +220,9 @@ The retrieval comparison shows a narrow BM25 advantage overall, but the result i
 
 {audit_section.rstrip()}
 
-### Main Error Pattern
+### Main Error Patterns
 
+{confusion_note}
 {chr(10).join(confusion_lines)}
 
 {task3_narrative}
