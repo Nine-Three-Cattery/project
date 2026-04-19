@@ -12,7 +12,9 @@
 
 ## 环境准备
 
-最稳妥的方式是使用本地虚拟环境，因为部分 macOS 自带 Python 环境不允许直接向系统解释器安装包。
+最稳妥的方式是使用本地虚拟环境，因为部分系统 Python 环境不允许直接向解释器安装包。本项目的 shell 脚本是 Bash 入口；Windows 下请使用 Git Bash，PowerShell 和 CMD 不作为这些 `.sh` 脚本的支持入口。
+
+macOS/Linux：
 
 ```bash
 python3 -m venv .venv
@@ -21,7 +23,22 @@ python3 -m pip install --upgrade pip
 python3 -m pip install -r requirements.txt
 ```
 
+Windows + Git Bash：
+
+```bash
+python -m venv .venv
+source .venv/Scripts/activate
+python -m pip install --upgrade pip
+python -m pip install -r requirements.txt
+```
+
 项目面向 Python 3.10+，当前仓库是在 Python 3.14 环境下验证过的。
+虚拟环境创建后，Bash 脚本会自动检测 macOS/Linux 和 Windows Git Bash 下的项目 `.venv`。如果自动检测失败，可以显式传入解释器：
+
+```bash
+PYTHON=/c/path/to/project/.venv/Scripts/python.exe bash scripts/run_full_pipeline.sh
+```
+
 `requirements.txt` 锁定了本次可复现实验使用的顶层依赖版本。
 
 如果你还想冻结传递依赖和 Python 版本快照，可以执行：
@@ -264,7 +281,7 @@ bash scripts/run_task3_external_audit.sh
 ## 最终总报告
 
 ```bash
-$PYTHON -m src.build_final_report
+"$PYTHON" -m src.build_final_report
 ```
 
 生成：
@@ -285,8 +302,8 @@ bash scripts/prepare_submission.sh
 也可以单独做校验：
 
 ```bash
-$PYTHON -m src.verify_submission --root .
-$PYTHON -m src.verify_submission --root submission
+"$PYTHON" -m src.verify_submission --root .
+"$PYTHON" -m src.verify_submission --root submission
 ```
 
 若要在 `submission/` 准备好之后再打一个可上传压缩包：
@@ -322,7 +339,7 @@ bash scripts/package_submission.sh
 - 早期 Task 3 bootstrap 参数仍保存在 `configs/task3_bootstrap.yaml` 中，仅作为历史和对照用途。
 - 可选外部审计流程会把 provider-specific 结果单独存储，不会覆盖正式标签。
 - `requirements.txt` 锁顶层依赖，`requirements-lock.txt` 与 `.python-version` 提供更强的环境冻结能力。
-- 所有 shell 脚本通过 `scripts/detect_python.sh` 自动检测 Python ≥ 3.10 解释器（依次检查 venv、Homebrew、系统 Python）。如需指定，可设环境变量 `PYTHON=/path/to/python3`。
+- 所有 shell 脚本通过 `scripts/detect_python.sh` 自动检测 Python ≥ 3.10 解释器（依次检查 Unix `bin/` 和 Windows Git Bash `Scripts/` 布局下的项目虚拟环境与当前激活虚拟环境，然后检查 Homebrew 和系统 Python）。如需指定，可设环境变量 `PYTHON=/path/to/python3`。
 - `scripts/prepare_submission.sh` 会在重建产物后生成干净的 `submission/` 目录。
 - 整个项目尽量保持脚本化和可复现，不依赖 notebook。
 - Task 2 分析包含 **逐查询案例研究**：展示 BM25 和 TF-IDF 各自优势最大的查询的 top-3 检索结果，并附带基于实际文档内容的模型优劣分析。

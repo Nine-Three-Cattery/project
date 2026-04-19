@@ -12,7 +12,9 @@ The project is organized as a script-first, reproducible pipeline. All generated
 
 ## Environment
 
-The safest setup is a local virtual environment because some macOS Python installations block direct package installation into the system interpreter.
+The safest setup is a local virtual environment because some system Python installations block direct package installation into the interpreter. The project shell scripts are Bash entrypoints. On Windows, run them from Git Bash; PowerShell and CMD are not supported entrypoints for the `.sh` wrappers.
+
+macOS/Linux:
 
 ```bash
 python3 -m venv .venv
@@ -21,7 +23,22 @@ python3 -m pip install --upgrade pip
 python3 -m pip install -r requirements.txt
 ```
 
+Windows with Git Bash:
+
+```bash
+python -m venv .venv
+source .venv/Scripts/activate
+python -m pip install --upgrade pip
+python -m pip install -r requirements.txt
+```
+
 The project targets Python 3.10+ and was exercised with Python 3.14.
+After the virtual environment exists, the Bash scripts auto-detect the project `.venv` on macOS/Linux and Windows Git Bash. If detection fails, pass the interpreter explicitly:
+
+```bash
+PYTHON=/c/path/to/project/.venv/Scripts/python.exe bash scripts/run_full_pipeline.sh
+```
+
 The `requirements.txt` file is version-pinned to the exact package versions used for the current reproducible run.
 For a stronger environment snapshot that also freezes transitive dependencies, build `requirements-lock.txt` from a clean temporary virtual environment:
 
@@ -246,7 +263,7 @@ Notes:
 ## Final Report
 
 ```bash
-$PYTHON -m src.build_final_report
+"$PYTHON" -m src.build_final_report
 ```
 
 Generated artifacts:
@@ -267,8 +284,8 @@ bash scripts/prepare_submission.sh
 Validation is also available as a standalone command:
 
 ```bash
-$PYTHON -m src.verify_submission --root .
-$PYTHON -m src.verify_submission --root submission
+"$PYTHON" -m src.verify_submission --root .
+"$PYTHON" -m src.verify_submission --root submission
 ```
 
 To create a ready-to-upload archive after the clean submission bundle exists, run:
@@ -304,7 +321,7 @@ bash scripts/package_submission.sh
 - The earlier Task 3 bootstrap parameters still live in `configs/task3_bootstrap.yaml`, but that seed-generation recipe is no longer the authoritative label source.
 - The optional Task 3 external-audit workflow stores provider-specific review outputs separately from the released label file so second-pass checks never overwrite the authoritative dataset.
 - `requirements.txt` pins top-level dependencies, while `requirements-lock.txt` and `.python-version` provide a stronger frozen environment snapshot when needed.
-- All shell scripts source `scripts/detect_python.sh` to automatically find a Python ≥ 3.10 interpreter (checking venv, Homebrew, and system in order). Override with `PYTHON=/path/to/python3` if needed.
+- All shell scripts source `scripts/detect_python.sh` to automatically find a Python ≥ 3.10 interpreter (checking project and active virtual environments in Unix `bin/` and Windows Git Bash `Scripts/` layouts, then Homebrew and system Python). Override with `PYTHON=/path/to/python3` if needed.
 - `scripts/prepare_submission.sh` creates a clean `submission/` bundle after rebuilding outputs and stripping cache artifacts.
 - The code includes detailed English comments and docstrings, and the repository intentionally avoids notebooks in favor of scriptable workflows.
 - Task 2 analysis includes **per-query case studies** showing actual top-3 retrieved documents for the best BM25 and TF-IDF advantage queries, with content-specific explanations of why each model wins.

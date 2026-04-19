@@ -8,13 +8,30 @@ source scripts/detect_python.sh
 TEMP_DIR="$(mktemp -d)"
 trap 'rm -rf "$TEMP_DIR"' EXIT
 
-$PYTHON -m venv "$TEMP_DIR/venv"
-source "$TEMP_DIR/venv/bin/activate"
+LOCK_VENV="$TEMP_DIR/venv"
+"$PYTHON" -m venv "$LOCK_VENV"
 
-$PYTHON -m pip install --upgrade pip
-$PYTHON -m pip install -r requirements.txt
-$PYTHON -m pip freeze --exclude-editable | LC_ALL=C sort > requirements-lock.txt
-$PYTHON - <<'PY'
+LOCK_PYTHON=""
+for candidate in \
+  "$LOCK_VENV/bin/python3" \
+  "$LOCK_VENV/bin/python" \
+  "$LOCK_VENV/Scripts/python.exe" \
+  "$LOCK_VENV/Scripts/python"; do
+  if [[ -x "$candidate" ]] && _check_python_version "$candidate"; then
+    LOCK_PYTHON="$candidate"
+    break
+  fi
+done
+
+if [[ -z "$LOCK_PYTHON" ]]; then
+  echo "ERROR: Could not find Python >= 3.10 inside temporary virtual environment." >&2
+  exit 1
+fi
+
+"$LOCK_PYTHON" -m pip install --upgrade pip
+"$LOCK_PYTHON" -m pip install -r requirements.txt
+"$LOCK_PYTHON" -m pip freeze --exclude-editable | LC_ALL=C sort > requirements-lock.txt
+"$LOCK_PYTHON" - <<'PY'
 import platform
 from pathlib import Path
 
